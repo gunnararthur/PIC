@@ -1,0 +1,18 @@
+<h2>Skráning í stærðfræðikeppnina Pangeu 2017</h2>
+
+<form action="{% url 'skraning:to_student_info' %}" method="post">
+  {% csrf_token %}
+  Skóli:
+  <input type="text" name="school" ><br><br>
+  Tengiliður:
+  <input type="text" name="name" ><br><br>
+  Netfang:
+  <input type="text" name="email" ><br><br>
+  Bekkur:
+
+  <input type="radio" name="grade" value="8" checked> 8. bekkur
+  <input type="radio" name="grade" value="9">         9. bekkur<br><br>
+
+
+  <input type="submit" value="Áfram">
+</form>
