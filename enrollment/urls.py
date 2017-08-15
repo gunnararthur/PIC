@@ -18,5 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^skraning/', include('skraning.urls')),
+    url(r'^svor/', include('svor.urls')),
     url(r'^admin/', admin.site.urls),
+
 ]
