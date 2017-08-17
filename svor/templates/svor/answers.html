@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+ <head>
+  <title></title>
+  <style>
+
+table {
+  border-collapse: collapse;
+  border-style: solid;
+  border-width: 0px 0 0 0px;
+  border-color: silver;
+}
+
+td {
+  width: 100px;
+  border-style: solid;
+  border-width: 0 0px 0px 0;
+  border-color: silver;
+  height:5px
+}
+
+textarea,input{
+  height: 8px;
+  margin: 0px;
+  padding: 10px;
+  border-style: solid 1px red;
+  overflow: hidden;
+  width: 70%;
+}
+
+  </style>
+ </head>
+ <body>
+<form action="{% url 'svor:save_answers' %}" method="post">
+    {% csrf_token %}
+
+  <table>
+  <tr>
+  <td> Nafn </td>
+  <td> Sp 1 </td>
+  <td> Sp 2 </td>
+  <td> Sp 3 </td>
+  <td> Sp 4 </td>
+  </tr>
+   <tr>
+    <td> Gunnar </td>
+    <td><input type="text" name="Sp1"> </td>
+    <td><input type="text" name="Sp1"> </td>
+    <td><input type="text" name="Sp1"> </td>
+    <td><input type="text" name="Sp1"> </td>
+   </tr>
+   <tr>
+    <td> Solvi </td>
+    <td><input type="text" name="Sp1"> </td>
+    <td><input type="text" name="Sp1"> </td>
+    <td><input type="text" name="Sp1"> </td>
+    <td><input type="text" name="Sp1"> </td>
+
+   </tr>
+  </table>
+
+  <input type="submit" name="save" value="Vista">
+  </form>
+
+
+ </body>
+</html>

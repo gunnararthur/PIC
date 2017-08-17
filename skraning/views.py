@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 
-from .models import Group, Student, Contact
+from .models import Group, Student, Contact, Round
 
 # Create your views here.
 
