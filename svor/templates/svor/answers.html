@@ -30,33 +30,32 @@ textarea,input{
 
   </style>
  </head>
- <body>
-<form action="{% url 'svor:save_answers' %}" method="post">
+
+<body>
+
+<form action="{% url 'svor:save_answers' group_id round_nr %}" method="post">
     {% csrf_token %}
 
   <table>
   <tr>
   <td> Nafn </td>
-  <td> Sp 1 </td>
-  <td> Sp 2 </td>
-  <td> Sp 3 </td>
-  <td> Sp 4 </td>
-  </tr>
-   <tr>
-    <td> Gunnar </td>
-    <td><input type="text" name="Sp1"> </td>
-    <td><input type="text" name="Sp1"> </td>
-    <td><input type="text" name="Sp1"> </td>
-    <td><input type="text" name="Sp1"> </td>
-   </tr>
-   <tr>
-    <td> Solvi </td>
-    <td><input type="text" name="Sp1"> </td>
-    <td><input type="text" name="Sp1"> </td>
-    <td><input type="text" name="Sp1"> </td>
-    <td><input type="text" name="Sp1"> </td>
 
-   </tr>
+  {% for question in q_list %}
+    <td>Sp {{question}}</td>
+  {% endfor %}
+
+  </tr>
+
+{% for student in student_list %}
+  <tr>
+   <td> {{ student.name }} </td>
+   {% for question in q_list %}
+   <td><input type="text" name= "Sp_{{question}}_{{student.name}}" maxlength="1" > </td>
+   {% endfor %}
+  </tr>
+
+{% endfor %}
+
   </table>
 
   <input type="submit" name="save" value="Vista">
