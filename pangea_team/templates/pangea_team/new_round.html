@@ -1,0 +1,20 @@
+<h2>Búa til nýja umferð</h2>
+
+<form action="{% url 'pangea_team:to_answer_key' %}" method="post">
+  {% csrf_token %}
+
+  Númer umferðar:
+  <input type="radio" name="round_nr" value="1" checked> 1. umferð
+  <input type="radio" name="round_nr" value="2">         2. umferð
+  <input type="radio" name="round_nr" value="3">         Úrslit <br><br>
+
+  Bekkur:
+  <input type="radio" name="grade" value="8" checked> 8. bekkur
+  <input type="radio" name="grade" value="9">         9. bekkur<br><br>
+
+
+  Fjöldi spurninga:
+  <input type="text" name="nr_of_questions" ><br><br>
+
+  <input type="submit" value="Áfram">
+</form>

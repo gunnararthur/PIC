@@ -43,9 +43,9 @@ class Contact(models.Model):
 class Round(models.Model):
     grade = models.CharField(max_length=1)
     round_nr = models.IntegerField(default=0)
-    #nr_of_questions = models.IntegerField(default=0)
-    answer_key = models.CharField(max_length=100)
-    weights = models.CharField(max_length=100)
+    nr_of_questions = models.IntegerField(default=0)
+    answer_key = models.CharField(max_length=100, default='')
+    weights = models.CharField(max_length=100, default='')
     cutoff = models.IntegerField(default=0)
 
     def __str__(self):
