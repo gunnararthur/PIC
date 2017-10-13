@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     url(r'^skraning/', include('skraning.urls')),
     url(r'^svor/', include('svor.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^pangea_team/', include('pangea_team.urls')),
 
 ]
