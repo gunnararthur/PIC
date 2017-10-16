@@ -1,0 +1,28 @@
+<h2>Skrifa póst</h2>
+
+<form action="{% url 'pangea_team:send_email' %}" method="post">
+    {% csrf_token %}
+
+    Senda á <br>
+    <select name="recipients">
+        <option value="1-">1. umferð - allir</option>
+        <option value="1-8">1. umferð - 8. bekkur</option>
+        <option value="1-9">1. umferð - 9.bekkur</option>
+        <option value="2-">2. umferð - 8. bekkur</option>
+        <option value="2-8">2. umferð - 9. bekkur</option>
+        <option value="2-9">2. umferð - allir</option>
+        <option value="3-">Úrslit - 8. bekkur</option>
+        <option value="3-8">Úrslit - 9. bekkur</option>
+        <option value="3-9">Úrslit - allir</option>
+    </select> <br><br>
+
+
+    Titill <br>
+    <input type="text" name="subject"> <br><br>
+    Texti <br>
+    <textarea name="body" cols="60" rows="10"></textarea> <br><br>
+    Lykilorð<br>
+    <input type="password" name="password"> <br><br>
+
+    <input type="submit" value="Senda póst">
+</form>

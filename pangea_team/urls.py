@@ -18,8 +18,14 @@ urlpatterns = [
 
 
 
-
+    url(r'^home/email$', views.email_UI, name='email_UI'),
     url(r'^home/send_email$', views.send_email, name='send_email'),
+    url(r'^home/email/finish$', views.email_finish, name='email_finish'),
+
+
+
+
+
     url(r'^home/results$', views.results, name='results'),
 
 ]

@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 
 from skraning.models import Group, Student, Contact, Round
 
@@ -44,14 +45,35 @@ def save_answer_key(request, round_id):
 
     return HttpResponseRedirect(reverse('pangea_team:finish_new_round'))
 
-
-
 def finish_new_round(request):
     return HttpResponse('TAKK MAÐUR')
 
 
+
+def email_UI(request):
+    return render(request, 'pangea_team/email_UI.html')
+
 def send_email(request):
-    return HttpResponse('Svo þú vilt skrifa póst?')
+
+    subject = request.POST['subject']
+    body = request.POST['body']
+    password = request.POST['password']
+
+    recipients = request.POST['recipients'].split('-')
+
+    send_mail(
+    subject,
+    body,
+    'nemendasvor@gmail.com',
+    ['gunnararthur@gmail.com', 'solviro@gmail.com'],
+    fail_silently=False,
+    auth_password=password,
+    )
+
+    return HttpResponseRedirect(reverse('pangea_team:email_finish'))
+
+def email_finish(request):
+    return HttpResponse('Póstur hefur verið sendur')
 
 def results(request):
     return HttpResponse('Hér eru niðurstöður')

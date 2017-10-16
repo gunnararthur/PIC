@@ -3,7 +3,7 @@
     {% csrf_token %}
     <input type="submit" value="Ný umferð" />
 </form>
-<form action="{% url 'pangea_team:send_email' %}" method="post">
+<form action="{% url 'pangea_team:email_UI' %}" method="post">
     {% csrf_token %}
     <input type="submit" value="Senda póst" />
 </form>
