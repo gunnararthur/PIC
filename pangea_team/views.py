@@ -5,7 +5,9 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.conf import settings
+import os
 
 from skraning.models import Group, Student, Contact, Round
 
@@ -58,17 +60,26 @@ def send_email(request):
     subject = request.POST['subject']
     body = request.POST['body']
     password = request.POST['password']
-
+    settings.EMAIL_HOST_PASSWORD = password
+    #os.environ['EMAIL_HOST_PASSWORD']=password
+    #print os.environ.get("EMAIL_HOST_PASSWORD", "Hallo")
     recipients = request.POST['recipients'].split('-')
-
-    send_mail(
+    #her tharf ad vera fall sem kallar a retta vidtakendur
+    email = EmailMessage(
+        subject,
+        body,
+        'nemendasvor@gmail.com',
+        ['gunnararthur@gmail.com', 'solviro@gmail.com']
+    )
+    email.send()
+    """ send_mail(
     subject,
     body,
     'nemendasvor@gmail.com',
     ['gunnararthur@gmail.com', 'solviro@gmail.com'],
     fail_silently=False,
     auth_password=password,
-    )
+    )"""
 
     return HttpResponseRedirect(reverse('pangea_team:email_finish'))
 
