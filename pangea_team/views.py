@@ -61,8 +61,6 @@ def send_email(request):
     body = request.POST['body']
     password = request.POST['password']
     settings.EMAIL_HOST_PASSWORD = password
-    #os.environ['EMAIL_HOST_PASSWORD']=password
-    #print os.environ.get("EMAIL_HOST_PASSWORD", "Hallo")
     recipients = request.POST['recipients'].split('-')
     #her tharf ad vera fall sem kallar a retta vidtakendur
     email = EmailMessage(
