@@ -1,32 +1,47 @@
-<h2>Skráning í stærðfræðikeppnina Pangeu 2017</h2>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'skraning/style.css' %}" />
+    <title>Skráning í Pangeu – Nemendur</title>
+</head>
+<body>
 
+<div>
+<h2>Skráning í stærðfræðikeppnina Pangeu 2018</h2>
 
-<p>Skóli: {{group.school}}</p>
-<p>Tengiliður: {{contact.name}}</p>
-<p>Netfang: {{contact.email}}</p>
-<p>Bekkur: {{group.grade}}. bekkur</p>
+<label for="school">Skóli</label>
+<ul><li><em>{{group.school}}</em></li></ul>
+<label for="contact">Tengiliður</label>
+<ul style="list-style: none;"><li><em>{{contact.name}}</em></li></ul>
+<label for="email">Netfang</label>
+<ul style="list-style: none;"><li><em>{{contact.email}}</em></li></ul>
+<label for="grade">Bekkur</label>
+<ul style="list-style: none;"><li><em>{{group.grade}}. bekkur</em></li></ul>
+<hr>
 
+<a href='http://127.0.0.1:8000/skraning/download_excel'> <button type="button" class="button">Sækja skráningarskjal</button> </a>
 
-<a href='http://127.0.0.1:8000/skraning/download_excel'> <button type="button">Hlaða niður skjali</button> </a>
-
+<h3>Leiðbeiningar</h3>
 <p>
-    Leiðbeiningar:
-
-    1. MAFS
-    2. MÍM
-    3. MAM
-    {{message}}
-    {{message}}
-    {{message}}
-    {{message}}
+    Sækið skráningarskjal hér fyrir ofan og skráið nöfn og kennitölur þátttakenda
+    í viðeigandi dálka. Þegar því er lokið skal skjalinu hlaðið aftur inn með
+    því að velja <em>'Choose File'</em> og síðan <m>'Áfram'</m>.
 </p>
 
 <form enctype='multipart/form-data' action="{% url 'skraning:read_excel_upload' contact.id group.id %}" method='post'>
     {% csrf_token %}
-    <input type='file' name='skradir_nemendur'>
-    <input type='submit' name='Submit'>
+    <input type='submit' name='Submit' value='Áfram' class="button">
+    <input type='file' name='skradir_nemendur' class="fileContainer">
 </form>
 
-{% if message == 1 %}
-    Aðeins er tekið á móti excel skjölum.
+{% if message == '1' %}
+    <button type="button" class="errorwindow">Aðeins er hægt að hlaða inn excel skjölum</button>
 {% endif %}
+{% if message == '2' %}
+    <button type="button" class="errorwindow">Mundu að ýta á <em>'Choose File'</em> til að hlaða inn skráningarskjalinu</button>
+{% endif %}
+
+</div>
+
+</body>
+</html>

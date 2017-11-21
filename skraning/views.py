@@ -31,7 +31,7 @@ def to_student_info(request):
 def student_info(request, contact_id, group_id, message):
     contact = get_object_or_404(Contact, pk=contact_id)
     group = get_object_or_404(Group, pk=group_id)
-    return render(request, 'skraning/student_info.html', {'contact': contact, 'group': group})
+    return render(request, 'skraning/student_info.html', {'contact': contact, 'group': group, 'message': message})
 
 def next_student_info(request, contact_id, group_id, message):
     # Bý til nema
@@ -72,12 +72,16 @@ def download_excel(request):
     #raise Http404
 
 def read_excel_upload(request, contact_id, group_id):
-    end = request.FILES['skradir_nemendur'].name
-    print type(end)
-    print end
-    print end[-4:]
-    if end[-4:] == 'xlsx' or end[-3:] == 'xls':
-        #skradir_nemendur = request.FILES['skradir_nemendur']
+
+    if 'skradir_nemendur' in request.FILES:
+        file_name = request.FILES['skradir_nemendur'].name
+    else:
+        message = 2
+        print message
+        return HttpResponseRedirect(reverse('skraning:student_info', args=[contact_id, group_id, message]))
+
+
+    if file_name[-4:] == 'xlsx' or file_name[-3:] == 'xls':
         skradir_nemendur = pandas.read_excel(request.FILES['skradir_nemendur'])
         group_of_student = get_object_or_404(Group, pk=group_id)
         for i in skradir_nemendur.index:
@@ -85,9 +89,15 @@ def read_excel_upload(request, contact_id, group_id):
             student_kt = skradir_nemendur.iloc[i,1]
             student = Student(name=student_name, kt=student_kt, group=group_of_student)
             student.save()
-        return HttpResponse('TÖFLUVIEW')
+        return HttpResponseRedirect(reverse('skraning:student_table', args=[contact_id, group_id]))
     else:
-        #redirecta á
         message = 1
+        print message
         return HttpResponseRedirect(reverse('skraning:student_info', args=[contact_id, group_id, message]))
     return HttpResponse(' c",')
+
+def student_table(request, contact_id, group_id):
+    group = get_object_or_404(Group, pk=group_id)
+    student_list = group.student_set.all()
+    student_list = student_list.order_by('name')
+    return render(request, 'skraning/student_table.html', {'student_list': student_list})

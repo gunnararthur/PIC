@@ -18,4 +18,8 @@ urlpatterns = [
 
     url(r'^next_student_info/(?P<contact_id>[0-9]+)/(?P<group_id>[0-9]+)$', views.next_student_info, name='next_student_info'),
 
+    url(r'^(?P<contact_id>[0-9]+)/(?P<group_id>[0-9]+)/tafla$', views.student_table, name='student_table'),
+
+    url(r'finish', views.finish_enrollment, name='finish_enrollment'),
+
 ]

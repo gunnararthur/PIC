@@ -1,18 +1,37 @@
-<h2>Skráning í stærðfræðikeppnina Pangeu 2017</h2>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'skraning/style.css' %}" />
+    <title>Skráning í Pangeu - Tengiliðir</title>
+</head>
+<body>
+<div>
+    <h2>Skráning í stærðfræðikeppnina Pangeu 2018</h2>
 
-<form action="{% url 'skraning:to_student_info' %}" method="post">
-  {% csrf_token %}
-  Skóli:
-  <input type="text" name="school" ><br><br>
-  Tengiliður:
-  <input type="text" name="name" ><br><br>
-  Netfang:
-  <input type="text" name="email" ><br><br>
-  Bekkur:
+    <form action="{% url 'skraning:to_student_info' %}" method="post">
+      {% csrf_token %}
+      <label for="school">Skóli</label>
+      <input type="text" name="school" id="school" max_length=200 required>
 
-  <input type="radio" name="grade" value="8" checked> 8. bekkur
-  <input type="radio" name="grade" value="9">         9. bekkur<br><br>
+      <label for="contact">Tengiliður</label>
+      <input type="text" name="name" id="contact" max_length=200 required>
 
+      <label for="email">Netfang</label>
+      <input type="text" name="email" id="email" max_length=200 required>
 
-  <input type="submit" value="Áfram">
-</form>
+      <label for="grade">Bekkur</label>
+      <ul style="list-style: none;">
+          <li>
+          <input type="radio" name="grade" id="8val" value="8" checked>
+          <label for="8val">8. bekkur</label>
+          </li>
+          <li>
+          <input type="radio" name="grade" id="8val" value="9">
+          <label for="9val">9. bekkur</label>
+          </li>
+      </ul>
+      <input type="submit" value="Áfram">
+    </form>
+</div>
+</body>
+</html>
