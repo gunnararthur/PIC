@@ -15,18 +15,12 @@
     1. MAFS
     2. MÍM
     3. MAM
-    {{message}}
-    {{message}}
-    {{message}}
-    {{message}}
 </p>
 
-<form enctype='multipart/form-data' action="{% url 'skraning:read_excel_upload' contact.id group.id %}" method='post'>
+<form enctype='multipart/form-data' action="{% url 'skraning:read_excel' contact.id group.id %}" method='post'>
     {% csrf_token %}
     <input type='file' name='skradir_nemendur'>
     <input type='submit' name='Submit'>
 </form>
 
-{% if message == 1 %}
-    Aðeins er tekið á móti excel skjölum.
-{% endif %}
+<h1> VITLAUST! </h1>
