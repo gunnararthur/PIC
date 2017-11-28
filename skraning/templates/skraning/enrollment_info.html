@@ -8,7 +8,7 @@
 <div>
     <h2>Skráning í stærðfræðikeppnina Pangeu 2018</h2>
 
-    <form action="{% url 'skraning:to_student_info' %}" method="post">
+    <form enctype='multipart/form-data' action="{% url 'skraning:upload_enrollment_info' %}" method='post'>
       {% csrf_token %}
       <label for="school">Skóli</label>
       <input type="text" name="school" id="school" max_length=200 required>
@@ -30,8 +30,27 @@
           <label for="9val">9. bekkur</label>
           </li>
       </ul>
-      <input type="submit" value="Áfram">
+
+      <a href='http://127.0.0.1:8000/skraning/download_excel'> <button type="button" class="button">Sækja skráningarskjal</button> </a>
+      <h3>Leiðbeiningar</h3>
+      <p>
+          Sækið skráningarskjal hér fyrir ofan og skráið nöfn og kennitölur þátttakenda
+          í viðeigandi dálka. Þegar því er lokið skal skjalinu hlaðið aftur inn með
+          því að velja <em>'Choose File'</em> og síðan <m>'Áfram'</m>.
+      </p>
+
+        <input type='file' name='skradir_nemendur' class="fileContainer">
+        <input type='submit' name='Submit' value='Áfram' class="button">
+
     </form>
+
+    {% if message == '1' %}
+        <button type="button" class="errorwindow">Aðeins er hægt að hlaða inn excel skjölum</button>
+    {% endif %}
+    {% if message == '2' %}
+        <button type="button" class="errorwindow">Mundu að ýta á <em>'Choose File'</em> til að hlaða inn skráningarskjalinu</button>
+    {% endif %}
+
 </div>
 </body>
 </html>
