@@ -56,28 +56,18 @@ def email_UI(request):
     return render(request, 'pangea_team/email_UI.html')
 
 def send_email(request):
-
+    
     subject = request.POST['subject']
     body = request.POST['body']
-    password = request.POST['password']
-    settings.EMAIL_HOST_PASSWORD = password
     recipients = request.POST['recipients'].split('-')
     #her tharf ad vera fall sem kallar a retta vidtakendur
     email = EmailMessage(
         subject,
         body,
         'nemendasvor@gmail.com',
-        ['gunnararthur@gmail.com', 'solviro@gmail.com']
+        ['gunnararthur@gmail.com']
     )
     email.send()
-    """ send_mail(
-    subject,
-    body,
-    'nemendasvor@gmail.com',
-    ['gunnararthur@gmail.com', 'solviro@gmail.com'],
-    fail_silently=False,
-    auth_password=password,
-    )"""
 
     return HttpResponseRedirect(reverse('pangea_team:email_finish'))
 
