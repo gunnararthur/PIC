@@ -12,7 +12,9 @@ urlpatterns = [
 
     url(r'^upload_enrollment_info/', views.upload_enrollment_info, name='upload_enrollment_info'),
 
-    url(r'^(?P<contact_id>[0-9]+)/(?P<group_id>[0-9]+)/$', views.finish_enrollment, name='finish_enrollment'),
+    url(r'^(?P<contact_id>[0-9]+)/(?P<group_id>[0-9]+)/$', views.confirm_enrollment, name='finish_enrollment'),
+
+    url(r'^(?P<contact_id>[0-9]+)/(?P<group_id>[0-9]+)/stadfest$', views.confirm_enrollment, name='confirm_enrollment'),
 
 
 ]
