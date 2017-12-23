@@ -50,6 +50,8 @@ def upload_enrollment_info(request):
         return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
     return HttpResponse(' c",')
 
+    
+
 def confirm_enrollment(request, contact_id, group_id):
     group = get_object_or_404(Group, pk=group_id)
     student_list = group.student_set.all()
