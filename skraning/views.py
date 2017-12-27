@@ -59,6 +59,9 @@ def confirm_enrollment(request, contact_id, group_id):
     student_list = student_list.order_by('name')
     return render(request, 'skraning/student_table.html', {'student_list': student_list})
 
+def send_confirmation(request, contact_id, group_id):
+    return HttpResponse('ekkert enn')
+
 
 # def export_group_nparray(group_id):
 #     # Returns a numpy array where the names of students in a group (identified

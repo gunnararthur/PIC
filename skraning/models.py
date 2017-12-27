@@ -9,8 +9,9 @@ from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class Group(models.Model):
-    school = models.CharField(primary_key=True,max_length=200)
-    grade = models.CharField(primary_key=True,max_length=1)
+    school = models.CharField(max_length=200)
+    grade = models.CharField(max_length=1)
+    #name = models.CharField(primary_key=True,max_length=200)
 
     def __str__(self):
         return self.school + self.grade

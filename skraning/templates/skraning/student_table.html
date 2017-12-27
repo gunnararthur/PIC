@@ -22,6 +22,10 @@
     {% endfor %}
 </table>
 
+<form action="{% url 'skraning:send_confirmation' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Senda testpóst">
+</form>
 
 </div>
 
