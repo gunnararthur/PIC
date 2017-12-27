@@ -1,6 +1,6 @@
 <h2>Skrifa póst</h2>
 
-<form action="{% url 'pangea_team:send_email' %}" method="post">
+<form enctype='multipart/form-data' action="{% url 'pangea_team:send_email' %}" method="post">
     {% csrf_token %}
 
     Senda á <br>
@@ -21,8 +21,8 @@
     <input type="text" name="subject"> <br><br>
     Texti <br>
     <textarea name="body" cols="60" rows="10"></textarea> <br><br>
-    Lykilorð<br>
-    <input type="password" name="password"> <br><br>
+    Viðhengi <br>
+    <input type='file' name='email_attachment' class="fileContainer"> <br><br>
 
     <input type="submit" value="Senda póst">
 </form>

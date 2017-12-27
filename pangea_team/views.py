@@ -56,7 +56,7 @@ def email_UI(request):
     return render(request, 'pangea_team/email_UI.html')
 
 def send_email(request):
-    
+
     subject = request.POST['subject']
     body = request.POST['body']
     recipients = request.POST['recipients'].split('-')
@@ -67,6 +67,14 @@ def send_email(request):
         'nemendasvor@gmail.com',
         ['gunnararthur@gmail.com']
     )
+
+    if 'email_attachment' in request.FILES:
+        attachment_name = request.FILES['email_attachment'].name
+        attachment = request.FILES['email_attachment'].read()
+    else:
+        return HttpResponse('Virkar ekki kallinn.')
+
+    email.attach(attachment_name, attachment,'application/pdf')
     email.send()
 
     return HttpResponseRedirect(reverse('pangea_team:email_finish'))
