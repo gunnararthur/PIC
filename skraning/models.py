@@ -9,8 +9,8 @@ from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class Group(models.Model):
-    school = models.CharField(max_length=200)
-    grade = models.CharField(max_length=1)
+    school = models.CharField(primary_key=True,max_length=200)
+    grade = models.CharField(primary_key=True,max_length=1)
 
     def __str__(self):
         return self.school + self.grade
@@ -21,7 +21,7 @@ class Student(models.Model):
     ans1 = models.CharField(max_length=100, default='')
     ans2 = models.CharField(max_length=100, default='')
     ans3 = models.CharField(max_length=100, default='')
-    kt = models.CharField(max_length=11)
+    kt = models.CharField(primary_key=True,max_length=200)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     points1 = models.IntegerField(default=0)
     points2 = models.IntegerField(default=0)
@@ -33,7 +33,7 @@ class Student(models.Model):
 @python_2_unicode_compatible
 class Contact(models.Model):
     name = models.CharField(max_length=200)
-    email = models.CharField(max_length=200)
+    email = models.CharField(primary_key=True,max_length=200)
     groups = models.ManyToManyField(Group)
 
     def __str__(self):
@@ -41,8 +41,8 @@ class Contact(models.Model):
 
 @python_2_unicode_compatible
 class Round(models.Model):
-    grade = models.CharField(max_length=1)
-    round_nr = models.IntegerField(default=0)
+    grade = models.CharField(primary_key=True,max_length=1)
+    round_nr = models.IntegerField(primary_key=True,default=0)
     nr_of_questions = models.IntegerField(default=0)
     answer_key = models.CharField(max_length=100, default='')
     weights = models.CharField(max_length=100, default='')
