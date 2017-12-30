@@ -85,36 +85,25 @@ def send_confirmation(request, contact_index, group_index):
     workbook.close()
 
     subject = 'Pangea 2018 - Staðfesting'
-    body = ''' Sæl/Sæl
-    '''
+    body = '''Góðan dag %s\nÞetta er sjálfvirkur póstur sendur til staðfestingar
+    á skráningu í Stæðrfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu
+    með nemendum úr hópnum %s sem hafa nú verið skráðir. Takk fyrir
+    þátttökuna. Nánari upplýsingar berast þegar líður að keppninni.
+    ''' % (contact.name, group.name)
 
     email = EmailMessage(
         subject,
         body,
         'nemendasvor@gmail.com',
-        contact.email
+        [contact.email],
+        bcc=['nemendasvor@gmail.com']
     )
 
-    email.attach('nemendur.xlsx', f.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    email.attach('group.name_nemendur.xlsx', f.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     email.send()
 
     return HttpResponse('Takk fyrir skráninguna')
 
-
-# def export_group_nparray(group_id):
-#     # Returns a numpy array where the names of students in a group (identified
-#     # with group_id) are in the first column and their kt in the second
-#     group = get_object_or_404(Group, pk=group_id)
-#     student_list = group.student_set.all()
-#     nofn = np.empty((len(student_list),1), dtype='S200') # Er að prófa mig áfram með dtype. Þetta
-#     kts = np.empty((len(student_list),2), dtype='S11')   # þarf trúlega ekki að vera svona klunnalegt.
-#     table = np.stack((nofn, kts), axis=-1)
-#
-#     for i in range(len(student_list)):
-#         table[i,0] = student_list[i].name
-#         table[i,1] = student_list[i].kt
-#
-#     return table
 
 def export_group_cvs(request, queryset):
     import csv
