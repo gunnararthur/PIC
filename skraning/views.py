@@ -94,9 +94,9 @@ def send_confirmation(request, contact_index, group_index):
     email = EmailMessage(
         subject,
         body,
-        'nemendasvor@gmail.com',
+        'nemendasvor.pangea@gmail.com',
         [contact.email],
-        bcc=['nemendasvor@gmail.com']
+        bcc=['nemendasvor.pangea@gmail.com']
     )
 
     email.attach('group.name_nemendur.xlsx', f.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
