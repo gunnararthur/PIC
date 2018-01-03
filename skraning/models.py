@@ -12,7 +12,7 @@ class Group(models.Model):
     name = models.CharField(primary_key=True,max_length=200)
     school = models.CharField(max_length=200)
     grade = models.CharField(max_length=1)
-    index = models.IntegerField(default=0)
+    index = models.CharField(max_length=200)
 
     def __str__(self):
         return self.school + self.grade
@@ -28,7 +28,7 @@ class Student(models.Model):
     points1 = models.IntegerField(default=0)
     points2 = models.IntegerField(default=0)
     points3 = models.IntegerField(default=0)
-    index = models.IntegerField(default=0)
+    index = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
@@ -38,7 +38,7 @@ class Contact(models.Model):
     name = models.CharField(max_length=200)
     email = models.CharField(primary_key=True,max_length=200)
     groups = models.ManyToManyField(Group)
-    index = models.IntegerField(default=0)
+    index = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name

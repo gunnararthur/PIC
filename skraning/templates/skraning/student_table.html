@@ -22,11 +22,17 @@
     {% endfor %}
 </table>
 
-<form action="{% url 'skraning:send_confirmation' contact_index group_index %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="Staðfesta" />
-</form>
+<br>
 
+    <form action="{% url 'skraning:send_confirmation' contact_index group_index %}" method="post">
+        {% csrf_token %}
+        <input style="display:inline-block;" type="submit" value="Staðfesta" />
+    </form>
+
+    <form  action="{% url 'skraning:enrollment_info' '' %}" method="post">
+        {% csrf_token %}
+        <input style="background-color: #EF5350; display:inline-block;" type="submit" value="Hætta við" />
+    </form>
 
 </div>
 

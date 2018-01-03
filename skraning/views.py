@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from .models import Group, Student, Contact, Round
-import os, pandas, re, StringIO, csv, xlsxwriter as xl
+import os, pandas, re, StringIO, csv, xlsxwriter as xl, hashlib
 from django.core.mail import EmailMessage
 from django.utils.encoding import smart_str
 
@@ -25,9 +25,10 @@ def download_excel(request):
     #raise Http404
 
 def upload_enrollment_info(request):
-    contact = Contact(name=request.POST['name'], email=request.POST['email'], index=Contact.objects.all().count())
+    contact = Contact(name=request.POST['name'], email=request.POST['email'], index=hashlib.sha224(request.POST['email']).hexdigest())
     contact.save()
-    group = Group(school=request.POST['school'], grade=request.POST['grade'], name=request.POST['school']+request.POST['grade'], index=Group.objects.all().count())
+    name = convert_to_ice(request.POST['school'].replace(' ',''))+request.POST['grade']
+    group = Group(school=request.POST['school'].replace(' ',''), grade=request.POST['grade'], name=name, index=hashlib.sha224(name).hexdigest())
     group.save()
     contact.groups.add(group)
 
@@ -37,7 +38,6 @@ def upload_enrollment_info(request):
         message = 2
         return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
 
-
     if file_name[-4:] == 'xlsx' or file_name[-3:] == 'xls':
         skradir_nemendur = pandas.read_excel(request.FILES['skradir_nemendur'])
         for i in skradir_nemendur.index:
@@ -45,7 +45,7 @@ def upload_enrollment_info(request):
             student_kt = str(skradir_nemendur.iloc[i,1])
             student_kt = student_kt.replace('\s+ | -', '')
             if student_kt is not '':
-                student = Student(name=student_name, kt=student_kt, group=group, index=Student.objects.all().count())
+                student = Student(name=student_name, kt=student_kt, group=group, index=hashlib.sha224(student_kt).hexdigest())
                 student.save()
         return HttpResponseRedirect(reverse('skraning:confirm_enrollment', args=[contact.index, group.index]))
     else:
@@ -54,7 +54,13 @@ def upload_enrollment_info(request):
         return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
     return HttpResponse(' c",')
 
-
+def convert_to_ice(str):
+    out_str=''
+    ice_letters = {'á':'a','ð': 'd','é':'e','í':'i','ó':'o','ú':'u','ý':'y','þ':'th','æ':'ae','ö':'o'}
+    out_str = str.lower()
+    for i in range(0,len(ice_letters)):
+        out_str = re.sub(ice_letters.keys()[i], ice_letters[ice_letters.keys()[i]], out_str)
+    return out_str
 
 def confirm_enrollment(request, contact_index, group_index):
     group = get_object_or_404(Group, index=group_index)
