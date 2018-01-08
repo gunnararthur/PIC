@@ -49,7 +49,7 @@ def upload_enrollment_info(request):
         message = 1
         print message
         return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
-    return HttpResponse(' c",')
+    return HttpResponse('Óþekkt villa. Reynið aftur eða hafið samband.')
 
 def convert_to_ice(str):
     out_str=''
@@ -100,7 +100,7 @@ def send_confirmation(request, info_temp_index):
     workbook.close()
 
     subject = 'Pangea 2018 - Staðfesting'
-    body = 'Góðan dag %s,\nþetta er sjálfvirkur póstur sendur til staðfestingar á skráningu í Stærðfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu með nemendum úr hópnum %s sem nú hafa verið skráðir. Takk fyrir þátttökuna.\nNánari upplýsingar berast þegar líður að keppninni.\nMeð góðri kveðju,\nPangeateymið'% (contact.name, group.name)
+    body = 'Góðan dag %s,\n\nþetta er sjálfvirkur póstur sendur til staðfestingar á skráningu í Stærðfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu með nemendum úr hópnum %s sem nú hafa verið skráðir. Takk fyrir þátttökuna.\nNánari upplýsingar berast þegar líður að keppninni.\n\nMeð góðri kveðju,\nPangeateymið'% (contact.name, group.name)
 
     email = EmailMessage(
         subject,
@@ -113,8 +113,7 @@ def send_confirmation(request, info_temp_index):
     email.attach(group.name+'_nemendur.xlsx', f.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     email.send()
 
-    return HttpResponse('Takk fyrir skráninguna. Póstur hefur verið sendur á netfangið þitt til staðfestingar.\nEf pósturinn berst ekki, láttu okkur endilega vita með því að senda okkur línu á')
-
+    return render(request, 'skraning/confirm_complete.html')
 
 def export_group_cvs(request, queryset):
     import csv
