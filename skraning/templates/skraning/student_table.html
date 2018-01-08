@@ -7,6 +7,9 @@
 <body>
 <div>
 <h2>Skráning í stærðfræðikeppnina Pangeu 2018</h2>
+<p>Tengiliður: {{info_temp.contact_name}}</p>
+<p>Netfang: {{info_temp.contact_email}}</p>
+<p></p>
 <p>Þú hefur skráð eftirfarandi nemendur</p>
 
 <table id="nem">
@@ -24,7 +27,7 @@
 
 <br>
 
-    <form action="{% url 'skraning:send_confirmation' contact_index group_index %}" method="post">
+    <form action="{% url 'skraning:send_confirmation' info_temp.index %}" method="post">
         {% csrf_token %}
         <input style="display:inline-block;" type="submit" value="Staðfesta" />
     </form>

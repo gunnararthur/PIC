@@ -12,9 +12,9 @@ urlpatterns = [
 
     url(r'^upload_enrollment_info/', views.upload_enrollment_info, name='upload_enrollment_info'),
 
-    url(r'^(?P<contact_index>[0-9a-f]+)/(?P<group_index>[0-9a-f]+)/$', views.confirm_enrollment, name='confirm_enrollment'),
+    url(r'^(?P<info_temp_index>[0-9a-f]+)/$', views.confirm_enrollment, name='confirm_enrollment'),
 
-    url(r'^(?P<contact_index>[0-9a-f]+)/(?P<group_index>[0-9a-f]+)/stadfest$', views.send_confirmation, name='send_confirmation'),
+    url(r'^(?P<info_temp_index>[0-9a-f]+)/stadfest$', views.send_confirmation, name='send_confirmation'),
 
 
 ]

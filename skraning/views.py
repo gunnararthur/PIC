@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
-from .models import Group, Student, Contact, Round
+from .models import Group, Student, Contact, Round,Info_temp,Student_temp
 import os, pandas, re, StringIO, csv, xlsxwriter as xl, hashlib
 from django.core.mail import EmailMessage
 from django.utils.encoding import smart_str
@@ -25,19 +25,16 @@ def download_excel(request):
     #raise Http404
 
 def upload_enrollment_info(request):
-    contact = Contact(name=request.POST['name'], email=request.POST['email'], index=hashlib.sha224(request.POST['email']).hexdigest())
-    contact.save()
-    name = convert_to_ice(request.POST['school'].replace(' ',''))+request.POST['grade']
-    group = Group(school=request.POST['school'].replace(' ',''), grade=request.POST['grade'], name=name, index=hashlib.sha224(name).hexdigest())
-    group.save()
-    contact.groups.add(group)
+    group_name = convert_to_ice(request.POST['school'].replace(' ',''))+request.POST['grade']
+    info_temp = Info_temp(contact_name=request.POST['name'], contact_email=request.POST['email'],school=request.POST['school'].replace(' ',''),grade=request.POST['grade'],group_name=group_name,index=hashlib.sha224(str(Info_temp.objects.all().count())).hexdigest())
+    info_temp.save()
 
     if 'skradir_nemendur' in request.FILES:
         file_name = request.FILES['skradir_nemendur'].name
     else:
         message = 2
         return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
-
+    #check whether the input file is of type xlsx or xls
     if file_name[-4:] == 'xlsx' or file_name[-3:] == 'xls':
         skradir_nemendur = pandas.read_excel(request.FILES['skradir_nemendur'])
         for i in skradir_nemendur.index:
@@ -45,9 +42,9 @@ def upload_enrollment_info(request):
             student_kt = str(skradir_nemendur.iloc[i,1])
             student_kt = student_kt.replace('\s+ | -', '')
             if student_kt is not '':
-                student = Student(name=student_name, kt=student_kt, group=group, index=hashlib.sha224(student_kt).hexdigest())
-                student.save()
-        return HttpResponseRedirect(reverse('skraning:confirm_enrollment', args=[contact.index, group.index]))
+                student_temp = Student_temp(name=student_name, kt=student_kt, info=info_temp)
+                student_temp.save()
+        return HttpResponseRedirect(reverse('skraning:confirm_enrollment', args=[info_temp.index]))
     else:
         message = 1
         print message
@@ -62,17 +59,29 @@ def convert_to_ice(str):
         out_str = re.sub(ice_letters.keys()[i], ice_letters[ice_letters.keys()[i]], out_str)
     return out_str
 
-def confirm_enrollment(request, contact_index, group_index):
-    group = get_object_or_404(Group, index=group_index)
-    student_list = group.student_set.all()
+def confirm_enrollment(request, info_temp_index):
+    info_temp = get_object_or_404(Info_temp, index=info_temp_index)
+    student_list = info_temp.student_temp_set.all()
     student_list = student_list.order_by('name')
-    return render(request, 'skraning/student_table.html', {'student_list': student_list, 'contact_index': contact_index, 'group_index': group_index})
+    return render(request, 'skraning/student_table.html', {'student_list': student_list,'info_temp':info_temp})
 
-def send_confirmation(request, contact_index, group_index):
-    group = get_object_or_404(Group, index=group_index)
-    contact = get_object_or_404(Contact, index=contact_index)
-    student_list = group.student_set.all()
+def send_confirmation(request, info_temp_index):
+    info_temp = get_object_or_404(Info_temp, index=info_temp_index)
+    #store contact and group in actual database
+    contact = Contact(name=info_temp.contact_name, email=info_temp.contact_email, index=hashlib.sha224(info_temp.contact_email).hexdigest())
+    contact.save()
+    group = Group(school=info_temp.school, grade=info_temp.grade, name=info_temp.group_name, index=hashlib.sha224(info_temp.group_name).hexdigest())
+    group.save()
+    contact.groups.add(group)
+    student_list = info_temp.student_temp_set.all()
     student_list = student_list.order_by('name')
+    #store students in actual database
+    for i in student_list:
+        student_name = i.name
+        student_kt = i.kt
+        if i.kt is not '':
+            student = Student(name=i.name, kt=i.kt, group=group, index=hashlib.sha224(i.kt).hexdigest())
+            student.save()
 
     f = StringIO.StringIO() # create a file-like object
     workbook = xl.Workbook(f)
@@ -91,11 +100,7 @@ def send_confirmation(request, contact_index, group_index):
     workbook.close()
 
     subject = 'Pangea 2018 - Staðfesting'
-    body = '''Góðan dag %s\nÞetta er sjálfvirkur póstur sendur til staðfestingar
-    á skráningu í Stæðrfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu
-    með nemendum úr hópnum %s sem hafa nú verið skráðir. Takk fyrir
-    þátttökuna. Nánari upplýsingar berast þegar líður að keppninni.
-    ''' % (contact.name, group.name)
+    body = 'Góðan dag %s,\nþetta er sjálfvirkur póstur sendur til staðfestingar á skráningu í Stærðfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu með nemendum úr hópnum %s sem nú hafa verið skráðir. Takk fyrir þátttökuna.\nNánari upplýsingar berast þegar líður að keppninni.\nMeð góðri kveðju,\nPangeateymið'% (contact.name, group.name)
 
     email = EmailMessage(
         subject,
@@ -105,10 +110,10 @@ def send_confirmation(request, contact_index, group_index):
         bcc=['nemendasvor.pangea@gmail.com']
     )
 
-    email.attach('group.name_nemendur.xlsx', f.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    email.attach(group.name+'_nemendur.xlsx', f.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     email.send()
 
-    return HttpResponse('Takk fyrir skráninguna')
+    return HttpResponse('Takk fyrir skráninguna. Póstur hefur verið sendur á netfangið þitt til staðfestingar.\nEf pósturinn berst ekki, láttu okkur endilega vita með því að senda okkur línu á')
 
 
 def export_group_cvs(request, queryset):
@@ -127,3 +132,11 @@ def export_group_cvs(request, queryset):
             smart_str(obj.kt),
         ])
     return response
+
+
+# contact = Contact(name=request.POST['name'], email=request.POST['email'], index=hashlib.sha224(request.POST['email']).hexdigest())
+# contact.save()
+# name = convert_to_ice(request.POST['school'].replace(' ',''))+request.POST['grade']
+# group = Group(school=request.POST['school'].replace(' ',''), grade=request.POST['grade'], name=name, index=hashlib.sha224(name).hexdigest())
+# group.save()
+# contact.groups.add(group)

@@ -61,3 +61,22 @@ class Round(models.Model):
 
     def get_nr_of_questions(self):
         return len(self.answer_key)
+
+@python_2_unicode_compatible
+class Info_temp(models.Model):
+    contact_name = models.CharField(max_length=200)
+    contact_email = models.CharField(max_length=200)
+    school = models.CharField(max_length=200)
+    grade = models.CharField(max_length=200)
+    group_name = models.CharField(max_length=200)
+    index = models.CharField(max_length=200)
+    def __str__(self):
+        return self.contact_name
+
+@python_2_unicode_compatible
+class Student_temp(models.Model):
+    name = models.CharField(max_length=200)
+    kt = models.CharField(max_length=200)
+    info = models.ForeignKey(Info_temp, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
