@@ -31,6 +31,18 @@
           </li>
       </ul>
 
+      {% if message == '1' %}
+          <button type="button" class="errorwindow">Aðeins er hægt að hlaða inn excel skjölum</button>
+      {% endif %}
+      {% if message == '2' %}
+          <button type="button" class="errorwindow">Mundu að ýta á <em>'Choose File'</em> til að hlaða inn skráningarskjalinu</button>
+      {% endif %}
+      {% if message == '3' %}
+          <button type="button" class="errorwindow">Aðeins er tekið við skjölum sem eru á sama formi og skráningarskjalið
+          sem má nálgast hér að ofan. Gakktu úr skugga um að allt sé í lagi og reyndu aftur. Ef ekki tekst
+          að hlaða inn skráningarskjalinu skaltu hafa samband í gegnum info@pangeakeppni.is.</button>
+      {% endif %}
+
       <a href={{excel_path}}> <button type="button" class="button">Sækja skráningarskjal</button> </a>
       <h3>Leiðbeiningar</h3>
       <p>
@@ -48,12 +60,7 @@
 
     </form>
 
-    {% if message == '1' %}
-        <button type="button" class="errorwindow">Aðeins er hægt að hlaða inn excel skjölum</button>
-    {% endif %}
-    {% if message == '2' %}
-        <button type="button" class="errorwindow">Mundu að ýta á <em>'Choose File'</em> til að hlaða inn skráningarskjalinu</button>
-    {% endif %}
+
 
 </div>
 </body>

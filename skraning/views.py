@@ -37,17 +37,21 @@ def upload_enrollment_info(request):
     #check whether the input file is of type xlsx or xls
     if file_name[-4:] == 'xlsx' or file_name[-3:] == 'xls':
         skradir_nemendur = pandas.read_excel(request.FILES['skradir_nemendur'])
-        for i in skradir_nemendur.index:
-            student_name = skradir_nemendur.iloc[i,0]
-            student_kt = str(skradir_nemendur.iloc[i,1])
-            student_kt = student_kt.replace('\s+ | -', '')
-            if student_kt is not '':
-                student_temp = Student_temp(name=student_name, kt=student_kt, info=info_temp)
-                student_temp.save()
-        return HttpResponseRedirect(reverse('skraning:confirm_enrollment', args=[info_temp.index]))
+        if skradir_nemendur.shape[1] == 2:
+            for i in skradir_nemendur.index:
+                student_name = skradir_nemendur.iloc[i,0]
+                student_kt = str(skradir_nemendur.iloc[i,1])
+                student_kt = student_kt.replace('\s+ | -', '')
+                if student_kt is not '':
+                    student_temp = Student_temp(name=student_name, kt=student_kt, info=info_temp)
+                    student_temp.save()
+                # Hvað ef það vantar óvart kennitölu?
+            return HttpResponseRedirect(reverse('skraning:confirm_enrollment', args=[info_temp.index]))
+        else:
+            message = 3
+            return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
     else:
         message = 1
-        print message
         return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
     return HttpResponse('Óþekkt villa. Reynið aftur eða hafið samband.')
 
