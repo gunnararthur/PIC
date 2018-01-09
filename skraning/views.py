@@ -91,8 +91,9 @@ def send_confirmation(request, info_temp_index):
 
     row = 1
     col = 0
-
-    for student in student_list:
+    student_list_all = group.student_set.all()
+    student_list_all = student_list.order_by('name')
+    for student in student_list_all:
         worksheet.write(row, col, student.name)
         worksheet.write(row, col+1, student.kt)
         row += 1
