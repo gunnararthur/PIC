@@ -114,6 +114,10 @@ def send_confirmation(request, info_temp_index):
     email.send()
 
     return render(request, 'skraning/confirm_complete.html')
+<<<<<<< HEAD
+=======
+
+>>>>>>> 039a74fea61ff50ce37e09965cfd2a137aa6d5ee
 
 def export_group_cvs(request, queryset):
     import csv
