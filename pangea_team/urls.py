@@ -24,8 +24,6 @@ urlpatterns = [
 
 
 
-
-
     url(r'^home/results$', views.results, name='results'),
 
 ]
