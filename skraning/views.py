@@ -113,12 +113,7 @@ def send_confirmation(request, info_temp_index):
     email.attach(group.name+'_nemendur.xlsx', f.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     email.send()
 
-<<<<<<< HEAD
-    return HttpResponse('Takk fyrir skráninguna. Póstur hefur verið sendur á netfangið þitt til staðfestingar. Ef pósturinn berst ekki, láttu okkur endilega vita með því að senda okkur línu á info@pangeakeppni.is')
-
-=======
     return render(request, 'skraning/confirm_complete.html')
->>>>>>> d020d9d257b0e5cb82cc05da4c646b9228d74530
 
 def export_group_cvs(request, queryset):
     import csv
