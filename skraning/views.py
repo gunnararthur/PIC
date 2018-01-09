@@ -114,32 +114,3 @@ def send_confirmation(request, info_temp_index):
     email.send()
 
     return render(request, 'skraning/confirm_complete.html')
-<<<<<<< HEAD
-=======
-
->>>>>>> 039a74fea61ff50ce37e09965cfd2a137aa6d5ee
-
-def export_group_cvs(request, queryset):
-    import csv
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=nemendur.csv'
-    writer = csv.writer(response, csv.excel)
-    response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
-    writer.writerow([
-        smart_str(u"Nafn"),
-        smart_str(u"Kennitala"),
-    ])
-    for obj in queryset:
-        writer.writerow([
-            smart_str(obj.name),
-            smart_str(obj.kt),
-        ])
-    return response
-
-
-# contact = Contact(name=request.POST['name'], email=request.POST['email'], index=hashlib.sha224(request.POST['email']).hexdigest())
-# contact.save()
-# name = convert_to_ice(request.POST['school'].replace(' ',''))+request.POST['grade']
-# group = Group(school=request.POST['school'].replace(' ',''), grade=request.POST['grade'], name=name, index=hashlib.sha224(name).hexdigest())
-# group.save()
-# contact.groups.add(group)
