@@ -91,8 +91,9 @@ def send_confirmation(request, info_temp_index):
 
     row = 1
     col = 0
-
-    for student in student_list:
+    student_list_all = group.student_set.all()
+    student_list_all = student_list.order_by('name')
+    for student in student_list_all:
         worksheet.write(row, col, student.name)
         worksheet.write(row, col+1, student.kt)
         row += 1
@@ -100,7 +101,7 @@ def send_confirmation(request, info_temp_index):
     workbook.close()
 
     subject = 'Pangea 2018 - Staðfesting'
-    body = 'Góðan dag %s,\n\nþetta er sjálfvirkur póstur sendur til staðfestingar á skráningu í Stærðfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu með nemendum úr hópnum %s sem nú hafa verið skráðir. Takk fyrir þátttökuna.\nNánari upplýsingar berast þegar líður að keppninni.\n\nMeð góðri kveðju,\nPangeateymið'% (contact.name, group.name)
+    body = 'Góðan dag %s,\n\nþetta er sjálfvirkur póstur sendur til staðfestingar á skráningu í Stærðfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu með öllum nemendum úr hópnum %s sem nú hafa verið skráðir. Takk fyrir þátttökuna.\nNánari upplýsingar berast þegar líður að keppninni.\n\nMeð góðri kveðju,\nPangeateymið'% (contact.name, group.name)
 
     email = EmailMessage(
         subject,
@@ -114,29 +115,3 @@ def send_confirmation(request, info_temp_index):
     email.send()
 
     return render(request, 'skraning/confirm_complete.html')
-
-
-def export_group_cvs(request, queryset):
-    import csv
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=nemendur.csv'
-    writer = csv.writer(response, csv.excel)
-    response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
-    writer.writerow([
-        smart_str(u"Nafn"),
-        smart_str(u"Kennitala"),
-    ])
-    for obj in queryset:
-        writer.writerow([
-            smart_str(obj.name),
-            smart_str(obj.kt),
-        ])
-    return response
-
-
-# contact = Contact(name=request.POST['name'], email=request.POST['email'], index=hashlib.sha224(request.POST['email']).hexdigest())
-# contact.save()
-# name = convert_to_ice(request.POST['school'].replace(' ',''))+request.POST['grade']
-# group = Group(school=request.POST['school'].replace(' ',''), grade=request.POST['grade'], name=name, index=hashlib.sha224(name).hexdigest())
-# group.save()
-# contact.groups.add(group)
