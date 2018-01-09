@@ -101,7 +101,7 @@ def send_confirmation(request, info_temp_index):
     workbook.close()
 
     subject = 'Pangea 2018 - Staðfesting'
-    body = 'Góðan dag %s,\n\nþetta er sjálfvirkur póstur sendur til staðfestingar á skráningu í Stærðfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu með nemendum úr hópnum %s sem nú hafa verið skráðir. Takk fyrir þátttökuna.\nNánari upplýsingar berast þegar líður að keppninni.\n\nMeð góðri kveðju,\nPangeateymið'% (contact.name, group.name)
+    body = 'Góðan dag %s,\n\nþetta er sjálfvirkur póstur sendur til staðfestingar á skráningu í Stærðfræðikeppnina Pangeu 2018. Í viðhengi má nálgast töflu með öllum nemendum úr hópnum %s sem nú hafa verið skráðir. Takk fyrir þátttökuna.\nNánari upplýsingar berast þegar líður að keppninni.\n\nMeð góðri kveðju,\nPangeateymið'% (contact.name, group.name)
 
     email = EmailMessage(
         subject,
