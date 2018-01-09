@@ -18,3 +18,5 @@ class GroupAdmin(admin.ModelAdmin):
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Group)
 admin.site.register(Contact)
+admin.site.register(Info_temp)
+admin.site.register(Student_temp)
