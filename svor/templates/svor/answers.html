@@ -1,66 +1,43 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
  <head>
-  <title></title>
-  <style>
+     {% load static %}
+     <link rel="stylesheet" type="text/css" href="{% static 'svor/style.css' %}" />
+     <title></title>
 
-table {
-  border-collapse: collapse;
-  border-style: solid;
-  border-width: 0px 0 0 0px;
-  border-color: silver;
-}
-
-td {
-  width: 100px;
-  border-style: solid;
-  border-width: 0 0px 0px 0;
-  border-color: silver;
-  height:5px
-}
-
-textarea,input{
-  height: 8px;
-  margin: 0px;
-  padding: 10px;
-  border-style: solid 1px red;
-  overflow: hidden;
-  width: 70%;
-}
-
-  </style>
  </head>
 
 <body>
+<div>
+    <form action="{% url 'svor:save_answers' group_index round_nr %}" method="post">
+        {% csrf_token %}
 
-<form action="{% url 'svor:save_answers' group_id round_nr %}" method="post">
-    {% csrf_token %}
+        <table id="nem">
+        <tr>
+            <th rowspan="2">Nemandi</th>
+            <th colspan={{nr_of_questions}}> Spurningar </th>
+        </tr>
+        <tr>
+            {% for question in q_list %}
+            <th>{{question}}</th>
+            {% endfor %}
+        </tr>
 
-  <table>
-  <tr>
-  <td> Nafn </td>
+        {% for student in student_list %}
+        <tr>
+            <td class="nafn"> {{ student.name }} </td>
+            {% for question in q_list %}
+            <td><input type="text" name= "Sp_{{question}}_{{student.name}}" maxlength="1" > </td>
+            {% endfor %}
+        </tr>
 
-  {% for question in q_list %}
-    <td>Sp {{question}}</td>
-  {% endfor %}
+        {% endfor %}
 
-  </tr>
+        </table>
 
-{% for student in student_list %}
-  <tr>
-   <td> {{ student.name }} </td>
-   {% for question in q_list %}
-   <td><input type="text" name= "Sp_{{question}}_{{student.name}}" maxlength="1" > </td>
-   {% endfor %}
-  </tr>
+        <input type="submit" name="save" value="Vista">
+    </form>
 
-{% endfor %}
-
-  </table>
-
-  <input type="submit" name="save" value="Vista">
-  </form>
-
-
- </body>
+</div>
+</body>
 </html>

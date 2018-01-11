@@ -8,19 +8,20 @@ from django.urls import reverse
 from skraning.models import Group, Student, Contact, Round
 
 # Create your views here.
-def answers(request, group_id, round_nr):
+def answers(request, group_index, round_nr):
 
-    group = get_object_or_404(Group, pk=group_id)
+    group = get_object_or_404(Group, index=group_index)
     student_list = group.student_set.all()
+    student_list = student_list.order_by('name')
     nr_of_questions = 18 # HARÐKÓÐUN!!!!!! ARG
     q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
 
     return render(request, 'svor/answers.html', {'student_list': student_list,
-    'q_list': q_list, 'group_id': group_id, 'round_nr': round_nr })
+    'q_list': q_list, 'nr_of_questions': nr_of_questions, 'group_index': group_index, 'round_nr': round_nr })
 
-def save_answers(request, group_id, round_nr):
+def save_answers(request, group_index, round_nr):
 
-    group = get_object_or_404(Group, pk=group_id)
+    group = get_object_or_404(Group, pk=group_index)
     student_list = group.student_set.all()
     nr_of_questions = 18 # HARÐKÓÐUN!!!!!! ARG
     q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
@@ -48,4 +49,4 @@ def save_answers(request, group_id, round_nr):
         student.save()
         ans = ''
 
-    return HttpResponseRedirect(reverse('svor:answers', args=[group_id, round_nr]))
+    return HttpResponseRedirect(reverse('svor:answers', args=[group_index, round_nr]))
