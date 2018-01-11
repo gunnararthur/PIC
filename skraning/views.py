@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from .models import Group, Student, Contact, Round,Info_temp,Student_temp
-import os, pandas, re, StringIO, csv, xlsxwriter as xl, hashlib
+import os, pandas, re, StringIO, csv, xlsxwriter as xl, hashlib, string
 from django.core.mail import EmailMessage
 from django.utils.encoding import smart_str
 
@@ -36,13 +36,14 @@ def upload_enrollment_info(request):
         return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
     #check whether the input file is of type xlsx or xls
     if file_name[-4:] == 'xlsx' or file_name[-3:] == 'xls':
-        skradir_nemendur = pandas.read_excel(request.FILES['skradir_nemendur'],dtype={'Nafn':str,'Kennitala':str},na_values='')
+        skradir_nemendur = pandas.read_excel(request.FILES['skradir_nemendur'],dtype={'Nafn':unicode,'Kennitala':unicode},na_values='')
         skradir_nemendur = skradir_nemendur.replace('nan','')
         if skradir_nemendur.shape[1] == 2 and skradir_nemendur.columns[0] == 'Nemandi' and skradir_nemendur.columns[1] =='Kennitala':
             for i in skradir_nemendur.index:
                 student_name = skradir_nemendur.iloc[i,0]
-                student_kt = str(skradir_nemendur.iloc[i,1])
+                student_kt = skradir_nemendur.iloc[i,1]
                 student_kt = student_kt.replace('\s+ | -', '')
+                student_kt = student_kt.strip()
                 if student_kt is not '':
                     student_temp = Student_temp(name=student_name, kt=student_kt, info=info_temp)
                     student_temp.save()
