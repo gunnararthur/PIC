@@ -6,7 +6,7 @@ from . import views
 app_name = 'skraning'
 urlpatterns = [
     # ex: /skraning/
-    url(r'^(?P<message>[0-3]?)$', views.enrollment_info, name='enrollment_info'),
+    url(r'^(?P<message>[0-4]?)$', views.enrollment_info, name='enrollment_info'),
 
     url(r'^[0-3]?download_excel/$', views.download_excel, name='download_excel'),
 

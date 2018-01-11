@@ -36,12 +36,20 @@ def upload_enrollment_info(request):
         return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
     #check whether the input file is of type xlsx or xls
     if file_name[-4:] == 'xlsx' or file_name[-3:] == 'xls':
-        skradir_nemendur = pandas.read_excel(request.FILES['skradir_nemendur'],dtype={'Nafn':unicode,'Kennitala':unicode},na_values='')
+        try:
+            skradir_nemendur = pandas.read_excel(request.FILES['skradir_nemendur'],dtype={'Nafn':unicode,'Kennitala':unicode},na_values='')
+        except:
+            message=4
+            return HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
         skradir_nemendur = skradir_nemendur.replace('nan','')
         if skradir_nemendur.shape[1] == 2 and skradir_nemendur.columns[0] == 'Nemandi' and skradir_nemendur.columns[1] =='Kennitala':
             for i in skradir_nemendur.index:
-                student_name = skradir_nemendur.iloc[i,0]
-                student_kt = skradir_nemendur.iloc[i,1]
+                try:
+                    student_name = skradir_nemendur.iloc[i,0]
+                    student_kt = skradir_nemendur.iloc[i,1]
+                except:
+                    message=4
+                    HttpResponseRedirect(reverse('skraning:enrollment_info', args=[message]))
                 student_kt = student_kt.replace('\s+ | -', '')
                 student_kt = student_kt.strip()
                 if student_kt is not '':

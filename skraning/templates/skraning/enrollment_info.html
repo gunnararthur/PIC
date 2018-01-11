@@ -42,6 +42,11 @@
           sem má nálgast hér að ofan. Gakktu úr skugga um að allt sé í lagi og reyndu aftur. Ef ekki tekst
           að hlaða inn skráningarskjalinu skaltu hafa samband í gegnum info@pangeakeppni.is.</button>
       {% endif %}
+      {% if message == '4' %}
+          <button type="button" class="errorwindow"> Ekki náðist að lesa inn skjalið sem þú hlóðst inn.
+          Láttu okkur vita í gegnum info@pangeakeppni.is og við sjáum til þess að nemendurnir þínir verði
+          skráðir.</button>
+      {% endif %}
 
       <a href={{excel_path}}> <button type="button" class="button">Sækja skráningarskjal</button> </a>
       <h3>Leiðbeiningar</h3>
