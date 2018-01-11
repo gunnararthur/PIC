@@ -8,7 +8,7 @@ urlpatterns = [
     # ex: /skraning/
     url(r'^(?P<message>[0-4]?)$', views.enrollment_info, name='enrollment_info'),
 
-    url(r'^[0-3]?download_excel/$', views.download_excel, name='download_excel'),
+    url(r'^[0-4]?download_excel/$', views.download_excel, name='download_excel'),
 
     url(r'^upload_enrollment_info/', views.upload_enrollment_info, name='upload_enrollment_info'),
 
