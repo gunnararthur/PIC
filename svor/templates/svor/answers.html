@@ -9,8 +9,30 @@
 
 <body>
 <div>
-    <form action="{% url 'svor:save_answers' group_index round_nr %}" method="post">
+    <h2 align='center'>Pangea 2018 – Niðustöður {{round_nr}}. umferðar</h2>
+    <p align='center'>
+        <b>{{group.school}} – {{group.grade}}. bekkur</b>
+    </p>
+    <p>
+        Skráið svör þátttakenda í viðeigandi reiti með því að skrifa þann bókstaf
+        sem merkt var við í hverri spurningu. Skiljið reiti eftir auða ef svör
+        vantar eða ef nemandi tók ekki þátt í keppninni.
+    </p>
+    <p>
+        Geymið niðurstöður þegar búið er að fylla inn svör allra með því að ýta
+        á <em>Vista</em> – hnappinn fyrir neðan töfluna. Alltaf má bæta við eða breyta
+        skráðum niðurstöðum ef upp kemst um villur í skráningunni. Þá er
+        töflunni einfaldlega breytt og niðurstöður vistaðar á sama hátt og áður.
+    </p>
+    <p>
+        Gangið úr skugga um að allir tengiliðir hvers skóla hafi aðgang að
+        útfyllingarskjalinu og geti skráð niðurstöður sinna nemenda. Hafið
+        samband með tölvupósti á info@pangea.is ef eitthvað kemur upp á eða ef
+        grunur leikur á að vitlaust útfyllingarskjal hafi verið sent.
+    </p>
+    <form action="{% url 'svor:save_answers' group.index round_nr %}" method="post">
         {% csrf_token %}
+        {% load svor_tags %}
 
         <table id="nem">
         <tr>
@@ -27,7 +49,8 @@
         <tr>
             <td class="nafn"> {{ student.name }} </td>
             {% for question in q_list %}
-            <td><input type="text" name= "Sp_{{question}}_{{student.name}}" maxlength="1" > </td>
+
+            <td><input type="text" name="Sp_{{question}}_{{student.name}}" maxlength="1" value="{{student.ans1|get_at_index:forloop.counter0}}"> </td>
             {% endfor %}
         </tr>
 
