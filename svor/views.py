@@ -13,7 +13,8 @@ def answers(request, group_index, round_nr):
     group = get_object_or_404(Group, index=group_index)
     student_list = group.student_set.all()
     student_list = student_list.order_by('name')
-    nr_of_questions = 18 # HARÐKÓÐUN!!!!!! ARG
+    rnd = get_object_or_404(Round, id=str(round_nr)+str(group.grade))
+    nr_of_questions = rnd.nr_of_questions
     q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
 
     return render(request, 'svor/answers.html', {'student_list': student_list,
@@ -23,7 +24,8 @@ def save_answers(request, group_index, round_nr):
 
     group = get_object_or_404(Group, index=group_index)
     student_list = group.student_set.all()
-    nr_of_questions = 18 # HARÐKÓÐUN!!!!!! ARG
+    rnd = get_object_or_404(Round, id=str(round_nr)+str(group.grade))
+    nr_of_questions = rnd.nr_of_questions
     q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
 
     ans = ''
@@ -42,13 +44,10 @@ def save_answers(request, group_index, round_nr):
 
         if int(round_nr) is 1:
             student.ans1 = ans
-            print 'Halló! 1', 'ans= ', ans
         elif int(round_nr) is 2:
             student.ans2 = ans
-            print 'Halló! 2', 'ans= ', ans
         elif int(round_nr) is 3:
             student.ans3 = ans
-            print 'Halló! 3', 'ans= ', ans
         # ELSE SKILA ERROR
 
         student.save()

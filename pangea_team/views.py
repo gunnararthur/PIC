@@ -18,45 +18,6 @@ def home(request):
     return render(request, 'pangea_team/home.html')
 
 @login_required(login_url='/pangea_team/login')
-def new_round(request):
-    return render(request, 'pangea_team/new_round.html')
-
-@login_required(login_url='/pangea_team/login')
-def to_answer_key(request): # From new_round
-    umf = Round(grade=request.POST['grade'], round_nr=request.POST['round_nr'],
-    nr_of_questions=request.POST['nr_of_questions'])
-    umf.save()
-
-    return HttpResponseRedirect(reverse('pangea_team:answer_key', args=[umf.id]))
-
-@login_required(login_url='/pangea_team/login')
-def answer_key(request, round_id):
-    umf = get_object_or_404(Round, pk=round_id)
-    q_list = range(1,umf.nr_of_questions+1)
-    return render(request, 'pangea_team/answer_key.html', {'round': umf, 'q_list': q_list})
-
-@login_required(login_url='/pangea_team/login')
-def save_answer_key(request, round_id):
-    umf = get_object_or_404(Round, pk=round_id)
-    svor = ''
-    stig = ''
-
-    for question in range(1,umf.nr_of_questions+1):
-        svor += request.POST['svar_' + str(question)]
-        stig += request.POST['stig_' + str(question)]
-
-    umf.answer_key = svor
-    umf.weights = stig
-    umf.save()
-
-    return HttpResponseRedirect(reverse('pangea_team:finish_new_round'))
-
-@login_required(login_url='/pangea_team/login')
-def finish_new_round(request):
-    return HttpResponse('TAKK MAÐUR')
-
-
-@login_required(login_url='/pangea_team/login')
 def email_UI(request):
     return render(request, 'pangea_team/email_UI.html')
 

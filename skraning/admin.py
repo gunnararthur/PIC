@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from .models import Group, Student, Contact,Info_temp,Student_temp
+from .models import Group, Student, Contact,Info_temp,Student_temp, Round
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -20,3 +20,4 @@ admin.site.register(Group)
 admin.site.register(Contact)
 admin.site.register(Info_temp)
 admin.site.register(Student_temp)
+admin.site.register(Round)

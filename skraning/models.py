@@ -46,15 +46,16 @@ class Contact(models.Model):
 
 @python_2_unicode_compatible
 class Round(models.Model):
-    grade = models.CharField(primary_key=True,max_length=1)
-    round_nr = models.IntegerField(primary_key=True,default=0)
+    grade = models.CharField(max_length=1)
+    round_nr = models.IntegerField(default=0)
     nr_of_questions = models.IntegerField(default=0)
     answer_key = models.CharField(max_length=100, default='')
     weights = models.CharField(max_length=100, default='')
     cutoff = models.IntegerField(default=0)
+    id = models.CharField(primary_key=True,max_length=200)
 
     def __str__(self):
-        return self.round_nr + '. umferð - ' + self.grade + '. bekkur'
+        return str(self.round_nr) + '. umferð - ' + self.grade + '. bekkur'
 
     def is_legal(self):
         return len(self.weights) is len(self.answer_key)

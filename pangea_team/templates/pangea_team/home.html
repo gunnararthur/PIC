@@ -1,8 +1,4 @@
 
-<form action="{% url 'pangea_team:new_round' %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="Ný umferð" />
-</form>
 <form action="{% url 'pangea_team:email_UI' %}" method="post">
     {% csrf_token %}
     <input type="submit" value="Senda póst" />
