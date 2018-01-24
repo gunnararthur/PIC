@@ -19,7 +19,8 @@ def home(request):
 
 @login_required(login_url='/pangea_team/login')
 def email_UI(request):
-    return render(request, 'pangea_team/email_UI.html')
+    email_list = ''
+    return render(request, 'pangea_team/email_UI.html', {'email_list': email_list})
 
 @login_required(login_url='/pangea_team/login')
 def send_email(request):
@@ -45,6 +46,20 @@ def send_email(request):
     email.send()
 
     return HttpResponseRedirect(reverse('pangea_team:email_finish'))
+
+@login_required(login_url='/pangea_team/login')
+def generate_mail_list(request):
+    email_group = request.POST['email_group'].split('-')
+    #email_list =
+    return render(request, 'pangea_team/email_UI.html', {'email_list': email_list})
+
+
+
+# def body_input(s):
+#     # Byrjun á útfærslu á custom pósti (svipað mailmerge frá því 2017)
+#     var_names = re.findall(r"#([A-Z,a-z,0-9,\.]+)#", s)
+#     for name in var_names:
+#         if
 
 @login_required(login_url='/pangea_team/login')
 def email_finish(request):
