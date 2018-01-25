@@ -37,7 +37,7 @@ class Student(models.Model):
 class Contact(models.Model):
     name = models.CharField(max_length=200)
     email = models.CharField(primary_key=True,max_length=200)
-    groups = models.ManyToManyField(Group)
+    groups = models.ManyToManyField(Group,db_table="m2m_contact_group")
     index = models.CharField(max_length=200)
 
     def __str__(self):
