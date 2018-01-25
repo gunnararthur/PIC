@@ -51,7 +51,7 @@ class Round(models.Model):
     answer_key = models.CharField(max_length=100, default='')
     weights = models.CharField(max_length=100, default='')
     cutoff = models.IntegerField(default=0)
-    id = models.CharField(primary_key=True,max_length=200)
+    id = models.CharField(primary_key=True,default='',max_length=200)
 
     def __str__(self):
         return str(self.round_nr) + '. umferð - ' + self.grade + '. bekkur'
