@@ -48,7 +48,7 @@ textarea {
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: #f8f8f8;
+    background-color: #fefefe;
     resize: none;
 
 }
@@ -60,6 +60,7 @@ input[type=text], select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    background-color: #fefefe;
 }
 
 input[type=file] {
@@ -75,6 +76,7 @@ input[type=radio], select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    background-color: #fefefe;
 }
 
 div {
