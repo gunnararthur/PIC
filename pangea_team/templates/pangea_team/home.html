@@ -1,9 +1,22 @@
-
-<form action="{% url 'pangea_team:email_UI' %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="Senda póst" />
-</form>
-<form action="{% url 'pangea_team:results' %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="Niðurstöður" />
-</form>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style.css' %}" />
+    <title>Pangeateymið</title>
+</head>
+<body>
+<div>
+    <h2 align='center'>Pangea 2018</h2>
+    <div id="wrapper">
+        <form action="{% url 'pangea_team:email_UI' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Senda póst" />
+        </form>
+        <form action="{% url 'pangea_team:results' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Niðurstöður" />
+        </form>
+    </div>
+</div>
+</body>
+</html>
