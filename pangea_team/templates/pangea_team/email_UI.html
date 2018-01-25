@@ -1,46 +1,65 @@
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style.css' %}" />
+    <title>Pangeateymið</title>
+</head>
+<body>
+<div id='wide'>
+    <h2 align='center'>Pangea 2018</h2>
+    <h3>Netföng</h3>
+    <p>Hér má nálgast netfangalista fyrir tengiliði á mismunandi stigum keppninnar.</p>
+
+        <form enctype='multipart/form-data' action="{% url 'pangea_team:generate_mail_list' %}" method="post">
+            {% csrf_token %}
+            <select name="email_group">
+                <option value="1-">1. umferð - allir</option>
+                <option value="1-8">1. umferð - 8. bekkur</option>
+                <option value="1-9">1. umferð - 9.bekkur</option>
+                <option value="2-">2. umferð - allir</option>
+                <option value="2-8">2. umferð - 8. bekkur</option>
+                <option value="2-9">2. umferð - 9. bekkur</option>
+                <option value="3-">Úrslit - allir</option>
+                <option value="3-8">Úrslit - 8. bekkur</option>
+                <option value="3-9">Úrslit - 9. bekkur</option>
+            </select> <br><br>
+            <textarea name="body" cols="60" rows="10">{{email_list}}</textarea><br>
+            <div id='wrapper'>
+            <input type="submit" value="Sækja netföng">
+            </div>
+        </form>
+
+    <h3>Skrifa póst</h3>
+    <p>Einnig má senda pósta á viðeigandi hópa beint úr þessu umhverfi.</p>
+
+    <form enctype='multipart/form-data' action="{% url 'pangea_team:send_email' %}" id="mailmerge_form" method="post">
+        {% csrf_token %}
+
+        Viðtakendur <br>
+        <select name="recipients">
+            <option value="1-">1. umferð - allir</option>
+            <option value="1-8">1. umferð - 8. bekkur</option>
+            <option value="1-9">1. umferð - 9.bekkur</option>
+            <option value="2-">2. umferð - 8. bekkur</option>
+            <option value="2-8">2. umferð - 9. bekkur</option>
+            <option value="2-9">2. umferð - allir</option>
+            <option value="3-">Úrslit - 8. bekkur</option>
+            <option value="3-8">Úrslit - 9. bekkur</option>
+            <option value="3-9">Úrslit - allir</option>
+        </select> <br><br>
 
 
-<form enctype='multipart/form-data' action="{% url 'pangea_team:generate_mail_list' %}" method="post">
-    {% csrf_token %}
-    <select name="email_group">
-        <option value="1-">1. umferð - allir</option>
-        <option value="1-8">1. umferð - 8. bekkur</option>
-        <option value="1-9">1. umferð - 9.bekkur</option>
-        <option value="2-">2. umferð - 8. bekkur</option>
-        <option value="2-8">2. umferð - 9. bekkur</option>
-        <option value="2-9">2. umferð - allir</option>
-        <option value="3-">Úrslit - 8. bekkur</option>
-        <option value="3-8">Úrslit - 9. bekkur</option>
-        <option value="3-9">Úrslit - allir</option>
-    </select> <br><br>
-    <textarea name="body" cols="60" rows="10">{{email_list}}</textarea><br>
-    <input type="submit" value="Sækja netföng">
-</form>
 
-<h2>Skrifa póst</h2>
-<form enctype='multipart/form-data' action="{% url 'pangea_team:send_email' %}" method="post">
-    {% csrf_token %}
-
-    Senda á <br>
-    <select name="recipients">
-        <option value="1-">1. umferð - allir</option>
-        <option value="1-8">1. umferð - 8. bekkur</option>
-        <option value="1-9">1. umferð - 9.bekkur</option>
-        <option value="2-">2. umferð - 8. bekkur</option>
-        <option value="2-8">2. umferð - 9. bekkur</option>
-        <option value="2-9">2. umferð - allir</option>
-        <option value="3-">Úrslit - 8. bekkur</option>
-        <option value="3-8">Úrslit - 9. bekkur</option>
-        <option value="3-9">Úrslit - allir</option>
-    </select> <br><br>
-
-
-    Titill <br>
-    <input type="text" name="subject"> <br><br>
-    Texti <br>
-    <textarea name="body" cols="60" rows="10"></textarea> <br><br>
-    Viðhengi <br>
-    <input type='file' name='email_attachment' class="fileContainer"> <br><br>
-
-    <input type="submit" value="Senda póst">
-</form>
+        <label for="subject">Titill</label>
+        <input type="text" name="subject">
+        <label for="body">Texti<br></label>
+        <textarea name="body" form="mailmerge_form"></textarea>
+        <label for="email_attachment">Viðhengi<br></label>
+        <input type='file' name='email_attachment' class="fileContainer">
+        <div id='wrapper'>
+        <input type="submit" value="Senda póst">
+        </div>
+    </form>
+</div>
+</body>
+</html>
