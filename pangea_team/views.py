@@ -33,26 +33,25 @@ def email_UI(request):
 @login_required(login_url='/pangea_team/login')
 def send_email(request):
 
-    subject = request.POST['subject']
+    subject = request.POST['recipients']
     body = request.POST['body']
     try:
-        email_group = request.POST['email_group'].split('-')
+        email_group = request.POST['recipients'].split('-')
         round_nr = email_group[0]
         grade = email_group[1]
         recipients_list = generate_mail_list(round_nr, grade).split(',')
     except:
-        #HVAÐ?
         return HttpResponse('Passa að velja einhver hóp.')
 
     group_list = Group.objects.filter(contact__email__in=recipients_list).distinct()
     for group in group_list:
-        subject = eval_placeholder(request.POST['subject'],group)
-        body = eval_placeholder(request.POST['body'],group)
+        subject = eval_placeholder(request.POST['subject'],group,round_nr)
+        body = eval_placeholder(request.POST['body'],group,round_nr)
         recipients = list(Contact.objects.filter(groups=group).values_list('email',flat=True))
         email = EmailMessage(
             subject,
             body,
-            'nemendasvor@gmail.com',
+            'nemendasvor.pangea@gmail.com',
             recipients
         )
         email.send()
