@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.db import connection
-import os
+import os, re
 
 from skraning.models import Group, Student, Contact, Round
 
@@ -20,40 +20,75 @@ def home(request):
 
 @login_required(login_url='/pangea_team/login')
 def email_UI(request):
-    email_list = ''
+    try:
+        email_group = request.POST['email_group'].split('-')
+        round_nr = email_group[0]
+        grade = email_group[1]
+        email_list = generate_mail_list(round_nr, grade)
+    except:
+        email_list = generate_mail_list('','')
     return render(request, 'pangea_team/email_UI.html', {'email_list': email_list})
+
 
 @login_required(login_url='/pangea_team/login')
 def send_email(request):
 
     subject = request.POST['subject']
     body = request.POST['body']
-    recipients = request.POST['recipients'].split('-')
-    #her tharf ad vera fall sem kallar a retta vidtakendur
-    email = EmailMessage(
-        subject,
-        body,
-        'nemendasvor@gmail.com',
-        ['gunnararthur@gmail.com']
-    )
+    try:
+        email_group = request.POST['email_group'].split('-')
+        round_nr = email_group[0]
+        grade = email_group[1]
+        recipients_list = generate_mail_list(round_nr, grade).split(',')
+    except:
+        #HVAÐ?
+        return HttpResponse('Passa að velja einhver hóp.')
 
-    if 'email_attachment' in request.FILES:
-        attachment_name = request.FILES['email_attachment'].name
-        attachment = request.FILES['email_attachment'].read()
-    else:
-        return HttpResponse('Virkar ekki kallinn.')
+    group_list = Group.objects.filter(contact__email__in=recipients_list).distinct()
+    for group in group_list:
+        subject = eval_placeholder(request.POST['subject'],group)
+        body = eval_placeholder(request.POST['body'],group)
+        recipients = list(Contact.objects.filter(groups=group).values_list('email',flat=True))
+        email = EmailMessage(
+            subject,
+            body,
+            'nemendasvor@gmail.com',
+            recipients
+        )
+        email.send()
 
-    email.attach(attachment_name, attachment,'application/pdf')
-    email.send()
+    # if 'email_attachment' in request.FILES:
+    #     attachment_name = request.FILES['email_attachment'].name
+    #     attachment = request.FILES['email_attachment'].read()
+    # else:
+    #     return HttpResponse('Virkar ekki kallinn.')
+    #
+    # email.attach(attachment_name, attachment,'application/pdf')
+    # email.send()
 
     return HttpResponseRedirect(reverse('pangea_team:email_finish'))
 
-@login_required(login_url='/pangea_team/login')
-def generate_mail_list(request):
-    email_group = request.POST['email_group'].split('-')
-    round_nr = email_group[0]
-    grade = email_group[1]
-    print grade
+def eval_placeholder(s,group,round_nr):
+    # Takes in excactly three arguments: a string s, a Group group and an integer
+    # round_nr. The string can
+    # include three different placeholder tags #group.school#, #group.grade# or
+    # #group.index#. The output is a string where the placeholders have been
+    # replaced with appropriate values in respect to the group.
+    var_names = re.findall(r"#([A-Z,a-z,0-9,\.]+)#", s)
+    vals=[]
+    for name in var_names:
+        if 'group.school'==name:
+            vals.append(group.school)
+        if 'group.grade'==name:
+            vals.append(group.grade + '. bekkur')
+        if 'group.index'==name:
+            vals.append('http://138.197.177.72/svor/' + group.index + '/' + round_nr)
+    return re.sub(r"#([A-Z,a-z,0-9,\.]+)#","%s",s) % tuple(vals)
+
+
+def generate_mail_list(round_nr, grade):
+    if round_nr == '':
+        return ''
     if grade == '':
         round_8=get_object_or_404(Round,id=round_nr+'8')
         round_9=get_object_or_404(Round,id=round_nr+'9')
@@ -70,7 +105,7 @@ def generate_mail_list(request):
                 cursor.execute('SELECT distinct(c.email) FROM skraning_student s,skraning_group g,m2m_contact_group cg,skraning_contact c WHERE s.group_id=g.name and g.name=cg.group_id and cg.contact_id=c.email and (s.points2>= %s and g.grade = %s or s.points2>= %s and g.grade = %s)',(round_8.cutoff,'8',round_9.cutoff,'9'))
                 email_list=cursor.fetchall()
         else:
-            return HttpResponse('<h1>Page not found</h1>')
+            return 'ERROR'
     else:
         round = get_object_or_404(Round,id=round_nr+grade)
         print round.cutoff
@@ -87,27 +122,10 @@ def generate_mail_list(request):
                 cursor.execute('SELECT distinct(c.email) FROM skraning_student s,skraning_group g,m2m_contact_group cg,skraning_contact c WHERE s.group_id=g.name and g.name=cg.group_id and cg.contact_id=c.email and s.points2>= %s and g.grade = %s',(round.cutoff,grade))
                 email_list=cursor.fetchall()
         else:
-            return HttpResponse('<h1>Page not found</h1>')
+            return 'ERROR'
 
     email_list = ','.join([email_list[i][0] for i in range(len(email_list))])
-    return render(request, 'pangea_team/email_UI.html', {'email_list': email_list})
-
-
-
- def body_input(s,group):
-     # Byrjun á útfærslu á custom pósti (svipað mailmerge frá því 2017)
-     var_names = re.findall(r"#([A-Z,a-z,0-9,\.]+)#", s)
-     vals=[]
-     for name in var_names:
-         if 'group.school'==name[i]
-            vals.append(group.school)
-         if 'group.grade'==name[i]
-            vals.append(group.grade + '. bekkur'
-         if 'group.index'==name[i]
-            vals.append('138'group.index)
-    re.sub(r"#([A-Z,a-z,0-9,\.]+)#","%s",s)
-
-
+    return email_list
 
 
 @login_required(login_url='/pangea_team/login')

@@ -11,9 +11,10 @@
     <h3>Netföng</h3>
     <p>Hér má nálgast netfangalista fyrir tengiliði á mismunandi stigum keppninnar.</p>
 
-        <form enctype='multipart/form-data' action="{% url 'pangea_team:generate_mail_list' %}" method="post">
+        <form enctype='multipart/form-data' action="{% url 'pangea_team:email_UI'%}" method="post">
             {% csrf_token %}
             <select name="email_group">
+                <option value="-"> -- Veldu hóp -- </option>
                 <option value="1-">1. umferð - allir</option>
                 <option value="1-8">1. umferð - 8. bekkur</option>
                 <option value="1-9">1. umferð - 9.bekkur</option>
@@ -38,6 +39,7 @@
 
         Viðtakendur <br>
         <select name="recipients">
+            <option value = "-"> -- Veldu hóp -- </option>
             <option value="1-">1. umferð - allir</option>
             <option value="1-8">1. umferð - 8. bekkur</option>
             <option value="1-9">1. umferð - 9.bekkur</option>
