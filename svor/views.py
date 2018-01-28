@@ -43,11 +43,11 @@ def save_answers(request, group_index, round_nr):
                 #print 'if nei'
 
         if int(round_nr) is 1:
-            student.ans1 = ans
+            student.ans1 = ans.lower()
         elif int(round_nr) is 2:
-            student.ans2 = ans
+            student.ans2 = ans.lower()
         elif int(round_nr) is 3:
-            student.ans3 = ans
+            student.ans3 = ans.lower()
         # ELSE SKILA ERROR
 
         student.save()

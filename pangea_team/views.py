@@ -94,11 +94,21 @@ def generate_mail_list(request):
 
 
 
-# def body_input(s):
-#     # Byrjun á útfærslu á custom pósti (svipað mailmerge frá því 2017)
-#     var_names = re.findall(r"#([A-Z,a-z,0-9,\.]+)#", s)
-#     for name in var_names:
-#         if
+ def body_input(s,group):
+     # Byrjun á útfærslu á custom pósti (svipað mailmerge frá því 2017)
+     var_names = re.findall(r"#([A-Z,a-z,0-9,\.]+)#", s)
+     vals=[]
+     for name in var_names:
+         if 'group.school'==name[i]
+            vals.append(group.school)
+         if 'group.grade'==name[i]
+            vals.append(group.grade)
+         if 'group.index'==name[i]
+            vals.append(group.index)
+    
+
+
+
 
 @login_required(login_url='/pangea_team/login')
 def email_finish(request):
