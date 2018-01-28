@@ -102,10 +102,10 @@ def generate_mail_list(request):
          if 'group.school'==name[i]
             vals.append(group.school)
          if 'group.grade'==name[i]
-            vals.append(group.grade)
+            vals.append(group.grade + '. bekkur'
          if 'group.index'==name[i]
-            vals.append(group.index)
-    
+            vals.append('138'group.index)
+    re.sub(r"#([A-Z,a-z,0-9,\.]+)#","%s",s)
 
 
 
