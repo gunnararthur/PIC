@@ -26,7 +26,7 @@ def download_excel(request):
 
 def upload_enrollment_info(request):
     group_name = convert_to_ice(request.POST['school'].replace(' ',''))+request.POST['grade']
-    info_temp = Info_temp(contact_name=request.POST['name'], contact_email=request.POST['email'],school=request.POST['school'].replace(' ',''),grade=request.POST['grade'],group_name=group_name,index=hashlib.sha224(str(Info_temp.objects.all().count())).hexdigest())
+    info_temp = Info_temp(contact_name=request.POST['name'], contact_email=request.POST['email'].strip(),school=request.POST['school'].replace(' ',''),grade=request.POST['grade'],group_name=group_name,index=hashlib.sha224(str(Info_temp.objects.all().count())).hexdigest())
     info_temp.save()
 
     if 'skradir_nemendur' in request.FILES:
