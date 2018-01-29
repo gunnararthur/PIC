@@ -16,8 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(url = '/skraning/')),
     url(r'^skraning/', include('skraning.urls')),
     url(r'^svor/', include('svor.urls')),
     url(r'^admin/', admin.site.urls),
