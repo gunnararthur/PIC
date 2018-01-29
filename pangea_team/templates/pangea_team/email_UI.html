@@ -57,9 +57,12 @@
         <input type="text" name="subject">
         <label for="body">Texti<br></label>
         <textarea name="body" form="mailmerge_form"></textarea>
-        <label for="email_attachment">Viðhengi<br></label>
-        <input type='file' name='email_attachment' class="fileContainer">
+
+        {% comment %}<label for="email_attachment">Viðhengi<br></label>
+
+        <input type='file' name='email_attachment' class="fileContainer">{% endcomment %}
         <div id='wrapper'>
+        <button id='second_submit' type='submit' formaction="{% url 'pangea_team:send_test_email' %}">Senda prufupóst</button>
         <input type="submit" value="Senda póst">
         </div>
     </form>

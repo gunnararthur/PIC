@@ -1,0 +1,25 @@
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style.css' %}" />
+    <link rel="shortcut icon" href="{% static 'pangea_team/pangeaicon_2018.ico' %}" />
+    <title>Pangeateymið</title>
+</head>
+<body>
+    <div id='wide'>
+        <h2 align='center'>Pangea 2018</h2>
+        <p>Póstur hefur verið sendur frá nemendasvor.pangea@gmail.com</p>
+        <div id="wrapper">
+            <form action="{% url 'pangea_team:email_UI' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Til baka" />
+            </form>
+            <form action="{% url 'pangea_team:home' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Heim" />
+            </form>
+        </div>
+    </div>
+
+
+</body>

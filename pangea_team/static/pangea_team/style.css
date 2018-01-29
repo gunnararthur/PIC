@@ -96,8 +96,24 @@ div {
     margin: 0 auto;
     padding: 10px;
     position: relative;
+    white-space: normal;
 }
 
 #wide {
     width: 520px;
+}
+
+#second_submit {
+    width: 70%;
+    background-color: #0094cc;
+    color: white;
+    padding: 30px 20px;
+    margin: 8px 0;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    display:inline-block;
 }

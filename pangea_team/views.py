@@ -67,6 +67,23 @@ def send_email(request):
 
     return HttpResponseRedirect(reverse('pangea_team:email_finish'))
 
+@login_required(login_url='/pangea_team/login')
+def send_test_email(request):
+    group = Group(school= 'Testskóli', grade='8', name='Testskoli8', index='hex_code_hash')
+    subject = eval_placeholder(request.POST['subject'],group,'1')
+    body = eval_placeholder(request.POST['body'],group,'1')
+    recipients = ['nemendasvor.pangea@gmail.com']
+
+    email = EmailMessage(
+        subject,
+        body,
+        'nemendasvor.pangea@gmail.com',
+        recipients
+    )
+    email.send()
+    return HttpResponseRedirect(reverse('pangea_team:email_UI'))
+
+
 def eval_placeholder(s,group,round_nr):
     # Takes in excactly three arguments: a string s, a Group group and an integer
     # round_nr. The string can
@@ -76,11 +93,11 @@ def eval_placeholder(s,group,round_nr):
     var_names = re.findall(r"#([A-Z,a-z,0-9,\.]+)#", s)
     vals=[]
     for name in var_names:
-        if 'group.school'==name:
+        if 'school'==name:
             vals.append(group.school)
-        if 'group.grade'==name:
+        if 'grade'==name:
             vals.append(group.grade + '. bekkur')
-        if 'group.index'==name:
+        if 'link'==name:
             vals.append('http://138.197.177.72/svor/' + group.index + '/' + round_nr)
     return re.sub(r"#([A-Z,a-z,0-9,\.]+)#","%s",s) % tuple(vals)
 
@@ -129,7 +146,8 @@ def generate_mail_list(round_nr, grade):
 
 @login_required(login_url='/pangea_team/login')
 def email_finish(request):
-    return HttpResponse('Póstur hefur verið sendur')
+
+    return render(request, 'pangea_team/email_finish.html')
 
 @login_required(login_url='/pangea_team/login')
 def results(request):
