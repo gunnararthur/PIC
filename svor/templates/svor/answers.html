@@ -26,7 +26,7 @@
         töflunni einfaldlega breytt og niðurstöður vistaðar á sama hátt og áður.
     </p>
     <p>
-        Gangið úr skugga um að allir tengiliðir hvers skóla hafi aðgang að
+        Gangið úr skugga um að allir tengiliðir skólans hafi aðgang að
         útfyllingarskjalinu og geti skráð niðurstöður sinna nemenda. Hafið
         samband með tölvupósti á info@pangeakeppni.is ef eitthvað kemur upp á eða ef
         grunur leikur á að rangur hlekkur hafi borist.
@@ -38,6 +38,7 @@
         <table id="nem">
         <tr>
             <th rowspan="2">Nemandi</th>
+            <th rowspan="2">Kennitala</th>
             <th colspan={{nr_of_questions}}> Spurningar </th>
         </tr>
         <tr>
@@ -49,8 +50,8 @@
         {% for student in student_list %}
         <tr>
             <td class="nafn"> {{ student.name }} </td>
+            <td class="nafn"> {{ student.kt }} </td>
             {% for question in q_list %}
-            {% comment %}<td><input type="text" name="Sp_{{question}}_{{student.name}}" maxlength="1" value="{{student.ans1|get_at_index:forloop.counter0}}"> </td>{% endcomment %}
             <td><input type="text" name="Sp_{{question}}_{{student.name}}" maxlength="1" value="{% get_at_index student round_nr forloop.counter0 %}"> </td>
             {% endfor %}
         </tr>

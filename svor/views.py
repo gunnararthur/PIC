@@ -9,7 +9,6 @@ from skraning.models import Group, Student, Contact, Round
 
 # Create your views here.
 def answers(request, group_index, round_nr):
-
     group = get_object_or_404(Group, index=group_index)
     student_list = group.student_set.all()
     student_list = student_list.order_by('name')
@@ -21,7 +20,6 @@ def answers(request, group_index, round_nr):
     'q_list': q_list, 'nr_of_questions': nr_of_questions, 'group': group, 'round_nr': round_nr })
 
 def save_answers(request, group_index, round_nr):
-
     group = get_object_or_404(Group, index=group_index)
     student_list = group.student_set.all()
     rnd = get_object_or_404(Round, id=str(round_nr)+str(group.grade))
