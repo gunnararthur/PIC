@@ -151,4 +151,11 @@ def email_finish(request):
 
 @login_required(login_url='/pangea_team/login')
 def results(request):
-    return HttpResponse('Hér eru niðurstöður')
+    groups = Group.objects.all()
+    nr_groups = len(groups)
+    nr_groups_returned = 0
+    for g in groups:
+        students_ans=Student.objects.filter(group=g).values_list('ans1')
+        nr_groups_returned += ('',) not in students_ans
+
+    return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum.')
