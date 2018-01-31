@@ -163,4 +163,6 @@ def results(request):
             groups_not_returned.append(g)
     contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email'))
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
-    return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
+    #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
+
+    return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list})

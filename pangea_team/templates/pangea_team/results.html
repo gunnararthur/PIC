@@ -1,0 +1,19 @@
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style.css' %}" />
+    <link rel="shortcut icon" href="{% static 'pangea_team/pangeaicon_2018.ico' %}" />
+    <title>Pangea - Niðurstöður</title>
+</head>
+<body>
+<div id='wide'>
+
+
+    <h2 align='center'>Pangea 2018</h2>
+    <img style='width: 100%; object-fit: contain' src="{% static "pangea_team/pangealogo_2018.png" %}" alt="My image"/>
+    <p>{{nr_groups_returned}} hópar af {{nr_groups}} búnir að skila niðurstöðum.</p>
+
+    <label>Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru:</label>
+    <textarea name="body" cols="60" rows="10">{{email_list}}</textarea>
+</div>
+</body>
