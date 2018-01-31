@@ -161,7 +161,7 @@ def results(request):
             nr_groups_returned += 1
         else:
             groups_not_returned.append(g)
-    contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email'))
+    contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email').distinct())
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
     #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
 
