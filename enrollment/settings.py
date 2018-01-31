@@ -116,6 +116,8 @@ LOGIN_REDIRECT_URL = '/pangea_team/home/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+
 STATIC_URL = '/static/'
 STATIC_ROOT = 'PIC/static/'
 
