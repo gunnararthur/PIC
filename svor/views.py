@@ -47,7 +47,6 @@ def save_answers(request, group_index, round_nr):
         elif int(round_nr) is 3:
             student.ans3 = ans.lower()
         # ELSE SKILA ERROR
-
         student.save()
         ans = ''
 

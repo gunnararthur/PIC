@@ -80,3 +80,14 @@ class Student_temp(models.Model):
     info = models.ForeignKey(Info_temp, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
+
+@python_2_unicode_compatible
+class Results(models.Model):
+    group=models.ForeignKey(Group,on_delete=models.CASCADE)
+    round=models.ForeignKey(Round,on_delete=models.CASCADE)
+    index=models.CharField(primary_key=True,max_length=200)
+    returned=models.BooleanField(default=False)
+    active=models.IntegerField(default=0)
+    results=models.CharField(max_length=200,default='')
+    def __str__(self):
+        return self.results
