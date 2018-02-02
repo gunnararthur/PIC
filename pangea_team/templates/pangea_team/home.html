@@ -13,9 +13,17 @@
             {% csrf_token %}
             <input type="submit" value="Senda póst" />
         </form>
-        <form action="{% url 'pangea_team:results' %}" method="post">
+        <form action="{% url 'pangea_team:results' 1 %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="Niðurstöður" />
+            <input type="submit" value="Niðurstöður 1. umferð" />
+        </form>
+        <form action="{% url 'pangea_team:results' '2' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Niðurstöður 2. umferð" />
+        </form>
+        <form action="{% url 'pangea_team:results' '3' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Niðurstöður 3. umferð" />
         </form>
     </div>
 </div>

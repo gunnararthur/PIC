@@ -150,7 +150,7 @@ def email_finish(request):
     return render(request, 'pangea_team/email_finish.html')
 
 @login_required(login_url='/pangea_team/login')
-def results(request):
+def results(request, round_nr):
     groups = Group.objects.all()
     nr_groups = len(groups)
     groups_not_returned = []
@@ -163,12 +163,17 @@ def results(request):
             groups_not_returned.append(g)
     contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email').distinct())
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
-    #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
-    results_data_18=calculate_results(get_object_or_404(Round,id='18'),0.5)
-    results_data_19=calculate_results(get_object_or_404(Round,id='19'),0.5)
-    print results_data_18
-    print results_data_19
-    return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10)})
+    results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
+    results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
+
+    student_list8 = results_data_8['student_object']
+    points8 = list(results_data_8['points'])
+    student_list9 = results_data_9['student_object']
+    points9 = list(results_data_9['points'])
+    return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups,
+     'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10),
+     'student_list8': student_list8, 'points8': points8, 'points9': points9,
+     'student_list9': student_list9})
 
 def calculate_score(ans_str,round):
     #function which returns the total points and a binary array containing
