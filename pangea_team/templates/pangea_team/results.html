@@ -1,55 +1,18 @@
 <html>
 <head>
-    <style>
-            /* Style the tab */
-        .tab {
-            overflow: hidden;
-            border: 1px solid #ccc;
-            background-color: #f1f1f1;
-        }
 
-        /* Style the buttons inside the tab */
-        .tab button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            transition: 0.3s;
-            font-size: 17px;
-        }
-
-        /* Change background color of buttons on hover */
-        .tab button:hover {
-            background-color: #ddd;
-        }
-
-        /* Create an active/current tablink class */
-        .tab button.active {
-            background-color: #ccc;
-        }
-
-        /* Style the tab content */
-        .tabcontent {
-            display: none;
-            padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-top: none;
-        }
-    </style>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/results_style.css' %}" />
     <link rel="shortcut icon" href="{% static 'pangea_team/pangeaicon_2018.ico' %}" />
     <title>Pangea - Niðurstöður</title>
 </head>
 <body>
     {% load svor_tags %}
 <div id='wide'>
-
-
     <h2 align='center'>Pangea 2018</h2>
     <img style='width: 100%; object-fit: contain' src="{% static "pangea_team/pangealogo_2018.png" %}" alt="My image"/>
+
+    <h3>Skil</h3>
     {% if nr_groups_returned_mod10 is 1 %}
         <p>{{nr_groups_returned}} hópur af {{nr_groups}} búinn að skila niðurstöðum.</p>
     {% else %}
@@ -59,14 +22,21 @@
     <textarea name="body" cols="60" rows="10">{{email_list}}</textarea>
 
 
+    <h3>Niðurstöður</h3>
     <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'London')">8.bekkur</button>
+        <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'London')">8.bekkur</button>
         <button class="tablinks" onclick="openCity(event, 'Paris')">9. bekkur</button>
     </div>
 
     <div id="London" class="tabcontent">
         <table id="nem">
+            <col width=32>
+            <col width=230>
+            <col width=105>
+            <col width=100>
+            <col width=30>
             <tr>
+                <th> </th>
                 <th> Nafn </th>
                 <th> Kennitala </th>
                 <th> Skóli </th>
@@ -74,10 +44,11 @@
             </tr>
             {% for student in student_list8 %}
               <tr>
-               <td> {{ student.name }} </td>
-               <td> {{ student.kt }} </td>
-               <td> {{ student.group }} </td>
-               <td> {% get_val_at_index points8 forloop.counter0 %} </td>
+                  <td style='text-align: right;'> <b>{{ forloop.counter }}</b></td>
+                  <td> {{ student.name }} </td>
+                  <td> {{ student.kt }} </td>
+                  <td> {{ student.group }} </td>
+                  <td style='text-align: right;'> {% get_val_at_index points8 forloop.counter0 %} </td>
               </tr>
             {% endfor %}
         </table>
@@ -85,7 +56,13 @@
 
     <div id="Paris" class="tabcontent">
         <table id="nem">
+            <col width=32>
+            <col width=230>
+            <col width=105>
+            <col width=100>
+            <col width=30>
             <tr>
+                <th> </th>
                 <th> Nafn </th>
                 <th> Kennitala </th>
                 <th> Skóli </th>
@@ -93,10 +70,11 @@
             </tr>
             {% for student in student_list9 %}
               <tr>
-               <td> {{ student.name }} </td>
-               <td> {{ student.kt }} </td>
-               <td> {{ student.group }} </td>
-               <td> {% get_val_at_index points9 forloop.counter0 %} </td>
+                  <td style='text-align: right;'> <b>{{ forloop.counter }}</b></td>
+                  <td> {{ student.name }} </td>
+                  <td> {{ student.kt }} </td>
+                  <td> {{ student.group }} </td>
+                  <td style='text-align: right;'> {% get_val_at_index points9 forloop.counter0 %} </td>
               </tr>
             {% endfor %}
         </table>
@@ -116,6 +94,7 @@
             document.getElementById(cityName).style.display = "block";
             evt.currentTarget.className += " active";
         }
+        document.getElementById("defaultOpen").click();
     </script>
 </div>
 </body>

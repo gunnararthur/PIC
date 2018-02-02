@@ -1,31 +1,50 @@
 <html>
 <head>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/home_style.css' %}" />
     <link rel="shortcut icon" href="{% static 'pangea_team/pangeaicon_2018.ico' %}" />
     <title>Pangeateymið</title>
 </head>
 <body>
 <div>
     <h2 align='center'>Pangea 2018</h2>
-    <div id="wrapper">
+    <button class="accordion">Póstur</button>
+    <div class="panel">
         <form action="{% url 'pangea_team:email_UI' %}" method="post">
             {% csrf_token %}
             <input type="submit" value="Senda póst" />
         </form>
+    </div>
+
+    <button class="accordion">Niðurstöður</button>
+    <div class="panel">
         <form action="{% url 'pangea_team:results' 1 %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="Niðurstöður 1. umferð" />
-        </form>
-        <form action="{% url 'pangea_team:results' '2' %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Niðurstöður 2. umferð" />
-        </form>
-        <form action="{% url 'pangea_team:results' '3' %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Niðurstöður 3. umferð" />
+            <button type="submit">1. umferð</button>
+            <button type="submit" formaction="{% url 'pangea_team:results' 2 %}">2. umferð</button>
+            <button type="submit" formaction="{% url 'pangea_team:results' 3 %}">3. umferð</button>
         </form>
     </div>
 </div>
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+            this.classList.toggle("active");
+
+            /* Toggle between hiding and showing the active panel */
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + 'px';
+            }
+        });
+    }
+</script>
 </body>
 </html>

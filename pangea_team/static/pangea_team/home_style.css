@@ -1,0 +1,83 @@
+input[type=submit], button {
+    width: 100%;
+    background-color: #fff;
+    color: black;
+    margin: 0px 0;
+    font-size: 16px;
+    padding: 18px;
+    border: none;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    display:inline-block;
+    text-align: left;
+}
+
+input[type=submit]:hover, button:hover {
+    background-color: #eeeeee;
+}
+
+
+div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: sans-serif;
+    overflow:auto
+}
+
+form {
+    margin: 0px 0px 0px 0px;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    background-color: #0094cc;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    font-size: 16px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+.accordion:after {
+    content: '\002B'; /* Unicode character for "plus" sign (+) */
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    float: right;
+    margin-left: 5px;
+}
+
+.accordion:hover {
+    background-color:  #0087ba;
+}
+.active {
+    background-color:  #0077a3;
+}
+
+.active:after {
+    content: "\0336";
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 0 0px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+
+    width: 100%;
+    height: auto;
+    margin: 0;
+    position: relative;
+    white-space: normal;
+}
