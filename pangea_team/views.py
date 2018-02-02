@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.db import connection
-import os, re
+import os, re, pandas as pd, numpy as np, math as m
 
 from skraning.models import Group, Student, Contact, Round, Results
 
@@ -173,7 +173,6 @@ def results(request):
 def calculate_score(ans_str,round):
     #function which returns the total points and a binary array containing
     #which questions were correctly answered
-    import numpy as np
     points=0
     points_array=np.zeros((round.nr_of_questions,), dtype=np.int)
     for i in range(round.nr_of_questions):
@@ -184,7 +183,6 @@ def calculate_score(ans_str,round):
 def get_result_table(round):
     #function which generates a data frame including results for a particular
     #round object.
-    import pandas as pd
     if round.round_nr==1:
         with connection.cursor() as cursor:
             cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,s.ans1 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s ORDER BY s.kt',(round.grade,))
@@ -211,7 +209,7 @@ def get_result_table(round):
 def calculate_results(round,criteria):
     import pandas as pd
     import numpy as np
-    import math as m
+
     result_table=get_result_table(round)
     result_table['points']=0
     binary_answers=pd.DataFrame(0,index=np.arange(len(result_table)), columns=range(1,round.nr_of_questions+1))
