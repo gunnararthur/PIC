@@ -164,7 +164,10 @@ def results(request):
     contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email').distinct())
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
     #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
-    results_data=calculate_results(Round.objects.filter(grade='8')[0],0.5)
+    results_data_18=calculate_results(get_object_or_404(Round,id='18'),0.5)
+    results_data_19=calculate_results(get_object_or_404(Round,id='19'),0.5)
+    print results_data_18
+    print results_data_19
     return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10)})
 
 def calculate_score(ans_str,round):
@@ -231,7 +234,7 @@ def calculate_results(round,criteria):
     group_names=grouped_results.groups.keys()
     grouped_results=grouped_results.mean()
     for i in range(0,len(grouped_results)):
-        questions_results=list(binary_answers.loc[1,binary_answers.columns!="group_name"])
+        questions_results=list(binary_answers.loc[i,binary_answers.columns!="group_name"])
         results_string="-".join(str(questions_results[i]) for i in range(len(questions_results)))
         try:
             result_object=get_object_or_404(Results,index=group_names[i]+round.round_nr)
@@ -242,7 +245,7 @@ def calculate_results(round,criteria):
     result_object.results=results_string
     result_object.save()
     #now extract data of students that go to the next round
-    result_table=result_table.sort_values(by='points',ascending=False)
+    result_table=result_table.sort_values(by='points',ascending=False).reset_index(drop=True)
     if criteria > 1:
         remaining_students=result_table[result_table['points']>=result_table['points'].iloc[criteria-1]]
     elif criteria > 0 and criteria <=1:
