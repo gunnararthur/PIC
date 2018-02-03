@@ -7,7 +7,10 @@
 </head>
 <body>
 <div>
-    <h2 align='center'>Pangea 2018</h2>
+    <a href="{% url 'pangea_team:home' %}">
+    <img src="{% static "pangea_team/pangealogo_2018.png" %}" alt="My image"/>
+    </a>
+
     <button class="accordion">Póstur</button>
     <div class="panel">
         <form action="{% url 'pangea_team:email_UI' %}" method="post">
@@ -24,6 +27,16 @@
             <button type="submit" formaction="{% url 'pangea_team:results' 2 %}">2. umferð</button>
             <button type="submit" formaction="{% url 'pangea_team:results' 3 %}">3. umferð</button>
         </form>
+    </div>
+
+    <button class="accordion">Tölfræði</button>
+    <div class="panel">
+        <a href="{% url 'pangea_team:stat' 8 %}">
+            <button type="submit">8. bekkur</button>
+        </a>
+        <a href="{% url 'pangea_team:stat' 9 %}">
+            <button type="submit">9. bekkur</button>
+        </a>
     </div>
 </div>
 <script>

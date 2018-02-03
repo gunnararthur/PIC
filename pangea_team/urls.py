@@ -20,4 +20,6 @@ urlpatterns = [
 
     url(r'^home/results/(?P<round_nr>[1-3])$', views.results, name='results'),
 
+    url(r'^home/stat/(?P<grade>[89])$', views.stat, name='stat'),
+
 ]

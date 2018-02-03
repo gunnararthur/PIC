@@ -29,7 +29,6 @@ def email_UI(request):
         email_list = generate_mail_list('','')
     return render(request, 'pangea_team/email_UI.html', {'email_list': email_list})
 
-
 @login_required(login_url='/pangea_team/login')
 def send_email(request):
 
@@ -146,7 +145,6 @@ def generate_mail_list(round_nr, grade):
 
 @login_required(login_url='/pangea_team/login')
 def email_finish(request):
-
     return render(request, 'pangea_team/email_finish.html')
 
 @login_required(login_url='/pangea_team/login')
@@ -257,3 +255,7 @@ def calculate_results(round,criteria):
     round.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
     round.save()
     return remaining_students
+
+@login_required(login_url='/pangea_team/login')
+def stat(request, grade):
+    return HttpResponse('Hér væri hægt að birta tölfræði.')

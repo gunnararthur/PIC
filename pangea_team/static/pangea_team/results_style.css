@@ -25,6 +25,7 @@ div {
 }
 
 #wide {
+    border-radius: 5px;
     width: 520px;
 }
 
@@ -91,6 +92,8 @@ input[type=text], select {
     display: none;
     width: 100%;
     padding: 0px 0px;
+    overflow-y: scroll;
+    height: 440px;
 }
 
 #nem {

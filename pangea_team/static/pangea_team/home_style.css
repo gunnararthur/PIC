@@ -14,7 +14,7 @@ input[type=submit], button {
 }
 
 input[type=submit]:hover, button:hover {
-    background-color: #eeeeee;
+    background-color: #ffffff;
 }
 
 
@@ -42,7 +42,7 @@ form {
     font-size: 16px;
     width: 100%;
     text-align: left;
-    border: none;
+    border: 1px solid #0087ba;
     outline: none;
     transition: 0.4s;
 }
@@ -80,4 +80,10 @@ form {
     margin: 0;
     position: relative;
     white-space: normal;
+}
+
+img {
+    width: 100%;
+    object-fit: contain;
+    padding-bottom: 20px;
 }
