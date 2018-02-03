@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
+from django.contrib import messages
 
 from skraning.models import Group, Student, Contact, Round, Results
 
@@ -57,4 +58,5 @@ def save_answers(request, group_index, round_nr):
     results.active = active
     results.save()
 
+    messages.success(request, 'Skráð svör hafa verið vistuð!')
     return HttpResponseRedirect(reverse('svor:answers', args=[group_index, round_nr]))
