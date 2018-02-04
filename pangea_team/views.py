@@ -163,13 +163,11 @@ def results(request, round_nr):
             groups_not_returned.append(g)
     contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email').distinct())
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
-<<<<<<< HEAD
     #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
     v=['Arnar','Órnar','Arna','Örnari','Órn','Árni']
     v.sort(cmp=cmp2)
     print v
     return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10)})
-=======
     results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
     results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
 
@@ -181,7 +179,6 @@ def results(request, round_nr):
      'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10),
      'student_list8': student_list8, 'points8': points8, 'points9': points9,
      'student_list9': student_list9})
->>>>>>> 62123f8108f9a748e8cb0e7075ca84cae969e1a4
 
 def calculate_score(ans_str,round):
     #function which returns the total points and a binary array containing
