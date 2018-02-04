@@ -165,13 +165,12 @@ def results(request, round_nr):
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
 
     #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
-    v=['Arnar','Órnar','Arna','Örnari','Órn','Árni']
-    v.sort(cmp=cmp2)
-    print v
     return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10)})
 
-    results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
-    results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
+    #results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
+    #results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
+    results_data_8=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
+    results_data_9=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
 
     student_list8 = results_data_8['student_object']
     points8 = list(results_data_8['points'])
