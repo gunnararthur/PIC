@@ -22,4 +22,7 @@ urlpatterns = [
 
     url(r'^home/stat/(?P<grade>[89])$', views.stat, name='stat'),
 
+    url(r'^home/test/$', views.test, name='test'),
+    url(r'^home/test/wait$', views.time_test, name='time_test'),
+
 ]

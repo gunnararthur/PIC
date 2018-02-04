@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.db import connection
-import os, re, pandas as pd, numpy as np, math as m
+from django.contrib import messages
+import os, re, pandas as pd, numpy as np, math as m, time
+
 
 from skraning.models import Group, Student, Contact, Round, Results
 
@@ -259,3 +261,14 @@ def calculate_results(round,criteria):
 @login_required(login_url='/pangea_team/login')
 def stat(request, grade):
     return HttpResponse('Hér væri hægt að birta tölfræði.')
+
+@login_required(login_url='/pangea_team/login')
+def test(request):
+    return render(request, 'pangea_team/test.html')
+
+@login_required(login_url='/pangea_team/login')
+def time_test(request):
+    sec = float(request.POST['sec'])
+    time.sleep(sec)
+    messages.success(request, 'Biðinni er lokið!')
+    return HttpResponseRedirect(reverse('pangea_team:test'))

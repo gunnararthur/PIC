@@ -52,7 +52,7 @@ textarea {
     resize: none;
 
 }
-input[type=text], select {
+input[type=text], input[type=number], select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -116,4 +116,10 @@ div {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     display:inline-block;
+}
+
+img {
+    width: 100%;
+    object-fit: contain;
+    padding-bottom: 20px;
 }

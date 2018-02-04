@@ -1,0 +1,31 @@
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style.css' %}" />
+    <link rel="shortcut icon" href="{% static 'pangea_team/pangeaicon_2018.ico' %}" />
+    <title>Pangeateymið</title>
+</head>
+<body>
+<div>
+    <a href="{% url 'pangea_team:home' %}">
+    <img src="{% static "pangea_team/pangealogo_2018.png" %}" alt="My image"/>
+    </a>
+    <div id="wrapper">
+    <form action="{% url 'pangea_team:time_test' %}" method="post">
+        {% csrf_token %}
+        <label for="sec">Í hversu margar sekúndur á að bíða?</label>
+        <input type="number" name="sec" id="sec" required>
+        <input type="submit" value="Hefja bið!" />
+    </form>
+
+    {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+</div>
+</body>
+</html>
