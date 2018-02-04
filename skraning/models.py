@@ -89,5 +89,6 @@ class Results(models.Model):
     returned=models.BooleanField(default=False)
     active=models.IntegerField(default=0)
     results=models.CharField(max_length=200,default='')
+
     def __str__(self):
-        return self.results
+        return self.group

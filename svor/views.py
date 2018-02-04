@@ -53,7 +53,7 @@ def save_answers(request, group_index, round_nr):
     try:
         results = get_object_or_404(Results, index=group.name+str(round_nr))
     except:
-        results = Results(group=group, round=round, index=group.name+str(round_nr))
+        results = Results(group=group, round=rnd, index=group.name+str(round_nr))
     results.returned = True
     results.active = active
     results.save()
