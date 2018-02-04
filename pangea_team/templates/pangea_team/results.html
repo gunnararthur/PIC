@@ -1,16 +1,77 @@
 <html>
 <head>
+
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/results_style.css' %}" />
     <link rel="shortcut icon" href="{% static 'pangea_team/pangeaicon_2018.ico' %}" />
     <title>Pangea - Niðurstöður</title>
 </head>
 <body>
+    {% load svor_tags %}
 <div id='wide'>
+    <a href="{% url 'pangea_team:home' %}">
+    <img style='width: 60%; object-fit: contain; text-align: center;' src="{% static "pangea_team/pangealogo_2018.png" %}" alt="My image"/>
+    </a>
 
+    <h3>Niðurstöður</h3>
+    <div class="tab">
+        <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'London')">8.bekkur</button>
+        <button class="tablinks" onclick="openCity(event, 'Paris')">9. bekkur</button>
+    </div>
 
-    <h2 align='center'>Pangea 2018</h2>
-    <img style='width: 100%; object-fit: contain' src="{% static "pangea_team/pangealogo_2018.png" %}" alt="My image"/>
+    <div id="London" class="tabcontent">
+        <table id="nem">
+            <col width=32>
+            <col width=230>
+            <col width=105>
+            <col width=100>
+            <col width=30>
+            <tr>
+                <th> </th>
+                <th> Nafn </th>
+                <th> Kennitala </th>
+                <th> Skóli </th>
+                <th> Stig </th>
+            </tr>
+            {% for student in student_list8 %}
+              <tr>
+                  <td style='text-align: right;'> <b>{{ forloop.counter }}</b></td>
+                  <td> {{ student.name }} </td>
+                  <td> {{ student.kt }} </td>
+                  <td> {{ student.group }} </td>
+                  <td style='text-align: right;'> {% get_val_at_index points8 forloop.counter0 %} </td>
+              </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="Paris" class="tabcontent">
+        <table id="nem">
+            <col width=32>
+            <col width=230>
+            <col width=105>
+            <col width=100>
+            <col width=30>
+            <tr>
+                <th> </th>
+                <th> Nafn </th>
+                <th> Kennitala </th>
+                <th> Skóli </th>
+                <th> Stig </th>
+            </tr>
+            {% for student in student_list9 %}
+              <tr>
+                  <td style='text-align: right;'> <b>{{ forloop.counter }}</b></td>
+                  <td> {{ student.name }} </td>
+                  <td> {{ student.kt }} </td>
+                  <td> {{ student.group }} </td>
+                  <td style='text-align: right;'> {% get_val_at_index points9 forloop.counter0 %} </td>
+              </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <h3>Skil</h3>
     {% if nr_groups_returned_mod10 is 1 %}
         <p>{{nr_groups_returned}} hópur af {{nr_groups}} búinn að skila niðurstöðum.</p>
     {% else %}
@@ -18,5 +79,22 @@
     {% endif %}
     <label>Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru:</label>
     <textarea name="body" cols="60" rows="10">{{email_list}}</textarea>
+
+    <script>
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        document.getElementById("defaultOpen").click();
+    </script>
 </div>
 </body>

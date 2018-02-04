@@ -1,15 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
  <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
      {% load static %}
      <link rel="stylesheet" type="text/css" href="{% static 'svor/style.css' %}" />
      <link rel="shortcut icon" href="{% static 'svor/pangeaicon_2018.ico' %}" />
      <title>Pangea · {{group.school}} – {{group.grade}}. bekkur</title>
-
  </head>
 
 <body>
-<div>
+<div id='container'>
     <h2 align='center'>Pangea 2018 – Niðustöður {{round_nr}}. umferðar</h2>
     <p align='center'>
         <b>{{group.school}} – {{group.grade}}. bekkur</b>
@@ -63,6 +62,53 @@
         <input type="submit" name="save" value="Vista">
     </form>
 
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        {% for message in messages %}
+        <span class="close">&times;</span>
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+      </div>
+
+    </div>
+
 </div>
+<!-- Trigger/Open The Modal -->
+<button id="is_message"></button>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById('myModal');
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("is_message");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    {% if messages%}
+    document.getElementById("is_message").click();
+    {% endif %}
+</script>
+
 </body>
 </html>

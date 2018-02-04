@@ -18,6 +18,11 @@ urlpatterns = [
     #url(r'^home/email/generate_mail_list$', views.generate_mail_list, name='generate_mail_list'),
     url(r'^home/email/finish/$', views.email_finish, name='email_finish'),
 
-    url(r'^home/results/$', views.results, name='results'),
+    url(r'^home/results/(?P<round_nr>[1-3])$', views.results, name='results'),
+
+    url(r'^home/stat/(?P<grade>[89])$', views.stat, name='stat'),
+
+    url(r'^home/test/$', views.test, name='test'),
+    url(r'^home/test/wait$', views.time_test, name='time_test'),
 
 ]

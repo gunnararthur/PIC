@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
+from django.contrib import messages
 
-from skraning.models import Group, Student, Contact, Round
+from skraning.models import Group, Student, Contact, Round, Results
 
 # Create your views here.
 def answers(request, group_index, round_nr):
@@ -27,18 +28,16 @@ def save_answers(request, group_index, round_nr):
     q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
 
     ans = ''
+    active = 0
     # mafs = request.POST['Sp_GunnarArthurHelgason']
     # print mafs
     for student in student_list:
         for question in q_list:
             data = request.POST['Sp_' + str(question) + '_' + student.name]
-            #print student.name, data
             if data in 'abcdeABCDE' and data is not '':
                 ans = ans + data
-                #print 'if já'
             else:
                 ans = ans + 'x'
-                #print 'if nei'
 
         if int(round_nr) is 1:
             student.ans1 = ans.lower()
@@ -48,6 +47,16 @@ def save_answers(request, group_index, round_nr):
             student.ans3 = ans.lower()
         # ELSE SKILA ERROR
         student.save()
+        active += (set('abcdeABCDE') & set(ans) != set())
         ans = ''
 
+    try:
+        results = get_object_or_404(Results, index=group.name+str(round_nr))
+    except:
+        results = Results(group=group, round=round, index=group.name+str(round_nr))
+    results.returned = True
+    results.active = active
+    results.save()
+
+    messages.success(request, 'Skráð svör hafa verið vistuð!')
     return HttpResponseRedirect(reverse('svor:answers', args=[group_index, round_nr]))
