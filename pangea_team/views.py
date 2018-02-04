@@ -266,7 +266,6 @@ def calculate_results(round,criteria):
     round.save()
     return remaining_students
 
-<<<<<<< HEAD
 def cmp2(s1,s2):
     i=0
     ice_alphabet={'A':1,'Á':2,'B':3,'C':4,'D':5,'Ð':6,'E':7,'É':8,'F':9,'G':10,'H':11,'I':12,'Í':13,'J':14,'K':15,'L':16,'M':17,'N':18,'O':19,'Ó':20,'P':21,'R':22,'S':23,'T':24,'U':25,'Ú':26,'V':27,'W':28,'X':29,'Y':30,'Z':31,'Þ':32,'Æ':33,'Ö':34,'a':1,'á':2,'b':3,'c':4,'d':5,'ð':6,'e':7,'é':8,'f':9,'g':10,'h':11,'i':12,'í':13,'j':14,'k':15,'l':16,'m':17,'n':18,'o':19,'ó':20,'p':21,'r':22,'s':23,'t':24,'u':25,'ú':26,'v':27,'w':28,'x':29,'y':30,'z':31,'þ':32,'æ':33,'ö':34}
@@ -294,7 +293,7 @@ def cmp2(s1,s2):
         return -1
     else:
         return 1
-=======
+
 @login_required(login_url='/pangea_team/login')
 def stat(request, grade):
     return HttpResponse('Hér væri hægt að birta tölfræði.')
@@ -309,4 +308,3 @@ def time_test(request):
     time.sleep(sec)
     messages.success(request, 'Biðinni er lokið!')
     return HttpResponseRedirect(reverse('pangea_team:test'))
->>>>>>> 62123f8108f9a748e8cb0e7075ca84cae969e1a4
