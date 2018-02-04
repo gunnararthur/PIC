@@ -163,13 +163,15 @@ def results(request, round_nr):
             groups_not_returned.append(g)
     contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email').distinct())
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
+
+
     #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
-    v=['Arnar','Órnar','Arna','Örnari','Órn','Árni']
-    v.sort(cmp=cmp2)
-    print v
     return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10)})
-    results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
-    results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
+
+    #results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
+    #results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
+    results_data_8=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
+    results_data_9=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
 
     student_list8 = results_data_8['student_object']
     points8 = list(results_data_8['points'])
@@ -262,34 +264,6 @@ def calculate_results(round,criteria):
     round.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
     round.save()
     return remaining_students
-
-def cmp2(s1,s2):
-    i=0
-    ice_alphabet={'A':1,'Á':2,'B':3,'C':4,'D':5,'Ð':6,'E':7,'É':8,'F':9,'G':10,'H':11,'I':12,'Í':13,'J':14,'K':15,'L':16,'M':17,'N':18,'O':19,'Ó':20,'P':21,'R':22,'S':23,'T':24,'U':25,'Ú':26,'V':27,'W':28,'X':29,'Y':30,'Z':31,'Þ':32,'Æ':33,'Ö':34,'a':1,'á':2,'b':3,'c':4,'d':5,'ð':6,'e':7,'é':8,'f':9,'g':10,'h':11,'i':12,'í':13,'j':14,'k':15,'l':16,'m':17,'n':18,'o':19,'ó':20,'p':21,'r':22,'s':23,'t':24,'u':25,'ú':26,'v':27,'w':28,'x':29,'y':30,'z':31,'þ':32,'æ':33,'ö':34}
-    while(len(s1) > i and len(s2) > i):
-        #if char not found in dicitonary, assign it to a large enough value
-        try:
-            val_s1=ice_alphabet[s1[i]]
-        except:
-            val_s1=max(ice_alphabet.values())+1
-
-        try:
-            val_s2=ice_alphabet[s2[i]]
-        except:
-            val_s2=max(ice_alphabet.values())+1
-        if val_s1 < val_s2:
-            return -1
-        elif val_s1 > val_s2:
-            return 1
-        i=i+1
-    #at this point, if they are of same length, they must be equal
-    #if s1 is shorter than s2 return -1 else 1
-    if len(s1) ==i and len(s2)==i:
-        return 0
-    elif len(s1)==i:
-        return -1
-    else:
-        return 1
 
 @login_required(login_url='/pangea_team/login')
 def stat(request, grade):
