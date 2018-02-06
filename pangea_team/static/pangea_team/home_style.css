@@ -11,10 +11,11 @@ input[type=submit], button {
     transition-duration: 0.4s;
     display:inline-block;
     text-align: left;
+    border-radius: 0px;
 }
 
 input[type=submit]:hover, button:hover {
-    background-color: #ffffff;
+    background-color: #dddddd;
 }
 
 
