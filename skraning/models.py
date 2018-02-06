@@ -91,4 +91,4 @@ class Results(models.Model):
     results=models.CharField(max_length=200,default='')
 
     def __str__(self):
-        return self.group
+        return self.group.name+str(self.round.round_nr)
