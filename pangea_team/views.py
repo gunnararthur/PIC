@@ -124,19 +124,19 @@ def generate_mail_list(round_nr, grade):
         else:
             return 'ERROR'
     else:
-        round = get_object_or_404(Round,id=round_nr+grade)
-        print round.cutoff
+        rnd = get_object_or_404(Round,id=round_nr+grade)
+        print rnd.cutoff
         if round_nr=='1':
             with connection.cursor() as cursor:
                 cursor.execute('SELECT distinct(c.email) FROM skraning_group g,m2m_contact_group cg,skraning_contact c WHERE g.name=cg.group_id and cg.contact_id=c.email and g.grade=%s',[grade])
                 email_list=cursor.fetchall()
         elif round_nr=='2':
             with connection.cursor() as cursor:
-                cursor.execute('SELECT distinct(c.email) FROM skraning_student s,skraning_group g,m2m_contact_group cg,skraning_contact c WHERE s.group_id=g.name and g.name=cg.group_id and cg.contact_id=c.email and s.points1>= %s and g.grade = %s',(round.cutoff,grade))
+                cursor.execute('SELECT distinct(c.email) FROM skraning_student s,skraning_group g,m2m_contact_group cg,skraning_contact c WHERE s.group_id=g.name and g.name=cg.group_id and cg.contact_id=c.email and s.points1>= %s and g.grade = %s',(rnd.cutoff,grade))
                 email_list=cursor.fetchall()
         elif round_nr=='3':
             with connection.cursor() as cursor:
-                cursor.execute('SELECT distinct(c.email) FROM skraning_student s,skraning_group g,m2m_contact_group cg,skraning_contact c WHERE s.group_id=g.name and g.name=cg.group_id and cg.contact_id=c.email and s.points2>= %s and g.grade = %s',(round.cutoff,grade))
+                cursor.execute('SELECT distinct(c.email) FROM skraning_student s,skraning_group g,m2m_contact_group cg,skraning_contact c WHERE s.group_id=g.name and g.name=cg.group_id and cg.contact_id=c.email and s.points2>= %s and g.grade = %s',(rnd.cutoff,grade))
                 email_list=cursor.fetchall()
         else:
             return 'ERROR'
@@ -166,12 +166,14 @@ def results(request, round_nr):
 
 
     #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
-    return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10)})
+    #return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10)})
 
-    #results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
-    #results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
-    results_data_8=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
-    results_data_9=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
+    results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
+    print results_data_8
+    results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
+    print results_data_9
+    #results_data_8=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
+    #results_data_9=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
 
     student_list8 = results_data_8['student_object']
     points8 = list(results_data_8['points'])
@@ -182,32 +184,37 @@ def results(request, round_nr):
      'student_list8': student_list8, 'points8': points8, 'points9': points9,
      'student_list9': student_list9})
 
-def calculate_score(ans_str,round):
+def calculate_score(ans_str,rnd):
     #function which returns the total points and a binary array containing
     #which questions were correctly answered
     points=0
-    points_array=np.zeros((round.nr_of_questions,), dtype=np.int)
-    for i in range(round.nr_of_questions):
-        points_array[i]=ans_str[i]==round.answer_key[i]
-        points+= int(round.weights[i])*points_array[i]
+    points_array=np.zeros((rnd.nr_of_questions,), dtype=np.int)
+    if ans_str=='' or rnd.answer_key=='':
+        return points,points_array
+    if len(ans_str) is not len(rnd.answer_key) or rnd.nr_of_questions is not len(rnd.answer_key):
+        #Here it would be better to throw an error
+        return points,points_array
+    for i in range(rnd.nr_of_questions):
+        points_array[i]=ans_str[i]==rnd.answer_key[i]
+        points+= int(rnd.weights[i])*points_array[i]
     return points,points_array
 
-def get_result_table(round):
+def get_result_table(rnd):
     #function which generates a data frame including results for a particular
-    #round object.
-    if round.round_nr==1:
+    #rnd object.
+    if rnd.round_nr==1:
         with connection.cursor() as cursor:
-            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,s.ans1 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s ORDER BY s.kt',(round.grade,))
+            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,s.ans1 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s ORDER BY s.kt',(rnd.grade,))
             result_table=cursor.fetchall()
-    elif round.round_nr==2:
-        prev_round=get_object_or_404(Round,round_nr=1,grade=round.grade)
+    elif rnd.round_nr==2:
+        prev_round=get_object_or_404(Round,round_nr=1,grade=rnd.grade)
         with connection.cursor() as cursor:
-            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans2 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(round.grade,prev_round.cutoff,))
+            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans2 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(rnd.grade,prev_round.cutoff,))
             result_table=cursor.fetchall()
-    elif round.round_nr==3:
-        prev_round=get_object_or_404(Round,round_nr=2,grade=round.grade)
+    elif rnd.round_nr==3:
+        prev_round=get_object_or_404(Round,round_nr=2,grade=rnd.grade)
         with connection.cursor() as cursor:
-            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans3 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(round.grade,prev_round.cutoff,))
+            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans3 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(rnd.grade,prev_round.cutoff,))
             result_table=cursor.fetchall()
     #else: ERROR
     #convert tuples to dataframe with column name ans instead of ansx where x in {1,2,3}
@@ -218,23 +225,23 @@ def get_result_table(round):
     result_table['student_object']=students
     return result_table
 
-def calculate_results(round,criteria):
+def calculate_results(rnd,criteria):
     import pandas as pd
     import numpy as np
 
-    result_table=get_result_table(round)
+    result_table=get_result_table(rnd)
     result_table['points']=0
-    binary_answers=pd.DataFrame(0,index=np.arange(len(result_table)), columns=range(1,round.nr_of_questions+1))
+    binary_answers=pd.DataFrame(0,index=np.arange(len(result_table)), columns=range(1,rnd.nr_of_questions+1))
     for i in range(0,len(result_table)):
-        score_of_student=calculate_score(result_table['ans'][i],round)
+        score_of_student=calculate_score(result_table['ans'][i],rnd)
         result_table['points'][i]=score_of_student[0]
         binary_answers.loc[i]=score_of_student[1]
         student= result_table['student_object'][i]
-        if round.round_nr==1:
+        if rnd.round_nr==1:
             student.points1=result_table['points'][i]
-        elif round.round_nr==2:
+        elif rnd.round_nr==2:
             student.points2=result_table['points'][i]
-        elif round.round_nr==3:
+        elif rnd.round_nr==3:
             student.points3=result_table['points'][i]
         #else:
             #return ERROR
@@ -244,16 +251,15 @@ def calculate_results(round,criteria):
     group_names=grouped_results.groups.keys()
     grouped_results=grouped_results.mean()
     for i in range(0,len(grouped_results)):
-        questions_results=list(binary_answers.loc[i,binary_answers.columns!="group_name"])
+        questions_results=list(grouped_results.iloc[i,])
         results_string="-".join(str(questions_results[i]) for i in range(len(questions_results)))
         try:
-            result_object=get_object_or_404(Results,index=group_names[i]+round.round_nr)
-
+            result_object=get_object_or_404(Results,index=group_names[i]+str(rnd.round_nr))
         except:
-            result_object=Results(group=get_object_or_404(Group,name=group_names[i]),round=round,index=group_names[i]+str(round.round_nr))
-
-    result_object.results=results_string
-    result_object.save()
+            grp=get_object_or_404(Group,name=group_names[i])
+            result_object=Results(group=grp,round=rnd,index=group_names[i]+str(rnd.round_nr))
+        result_object.results=results_string
+        result_object.save()
     #now extract data of students that go to the next round
     result_table=result_table.sort_values(by='points',ascending=False).reset_index(drop=True)
     if criteria > 1:
@@ -261,9 +267,20 @@ def calculate_results(round,criteria):
     elif criteria > 0 and criteria <=1:
         remaining_students=result_table[result_table['points']>=result_table['points'].iloc[int(m.ceil(criteria*len(result_table))-1)]]
     else: return ERROR
-    round.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
-    round.save()
+    rnd.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
+    rnd.save()
     return remaining_students
+
+def total_avg_questions(rnd):
+  results_objects=Results.objects.filter(round=rnd)
+  count_list =[0]*rnd.nr_of_questions
+  sum_of_active=0
+  for results in results_objects:
+    avg_of_group=results.results.split('-')
+    active_students = results.active
+    sum_of_active+=active_students
+    count_list=[ y+active_students*float(x) for x,y in zip(avg_of_group,count_list) ]
+    return [x/sum_of_active for x in count_list]
 
 @login_required(login_url='/pangea_team/login')
 def stat(request, grade):
