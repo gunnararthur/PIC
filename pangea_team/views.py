@@ -193,7 +193,7 @@ def calculate_score(ans_str,rnd):
         return points,points_array
     for i in range(rnd.nr_of_questions):
         #Note: Terrible hardcode-ing
-        points_array[i] = ans_str[i]==rnd.answer_key[i] or (i==8 and  ans_str[i]=='c' and rnd.round_nr==1)
+        points_array[i] = ans_str[i]==rnd.answer_key[i] or (i==10 and  ans_str[i]=='a' and rnd.round_nr==1)
         points+= int(rnd.weights[i])*points_array[i]
     return points,points_array
 
