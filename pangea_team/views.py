@@ -192,7 +192,8 @@ def calculate_score(ans_str,rnd):
         #Here it would be better to throw an error
         return points,points_array
     for i in range(rnd.nr_of_questions):
-        points_array[i]=ans_str[i]==rnd.answer_key[i]
+        #Note: Terrible hardcode-ing
+        points_array[i] = ans_str[i]==rnd.answer_key[i] or (i==8 and  ans_str[i]=='c' and rnd.round_nr==1)
         points+= int(rnd.weights[i])*points_array[i]
     return points,points_array
 
@@ -225,10 +226,10 @@ def calculate_results(rnd,criteria):
     result_table['points']=0
     binary_answers=pd.DataFrame(0,index=np.arange(len(result_table)), columns=range(1,rnd.nr_of_questions+1))
     for i in range(0,len(result_table)):
-        score_of_student=calculate_score(result_table['ans'][i],rnd)
-        result_table['points'][i]=score_of_student[0]
-        binary_answers.loc[i]=score_of_student[1]
-        student= result_table['student_object'][i]
+        score_of_student = calculate_score(result_table['ans'][i],rnd)
+        result_table.points.iloc[i] = score_of_student[0]
+        binary_answers.loc[i,:] = score_of_student[1]
+        student = result_table['student_object'][i]
         if rnd.round_nr==1:
             student.points1=result_table['points'][i]
         elif rnd.round_nr==2:
