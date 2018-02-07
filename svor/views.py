@@ -11,10 +11,15 @@ from skraning.models import Group, Student, Contact, Round, Results
 # Create your views here.
 def answers(request, group_index, round_nr):
     group = get_object_or_404(Group, index=group_index)
-    student_list = list(group.student_set.all())
-    student_list.sort(cmp=cmp2)
     rnd = get_object_or_404(Round, id=str(round_nr)+str(group.grade))
     nr_of_questions = rnd.nr_of_questions
+    if round_nr=='1':
+        student_list = list(group.student_set.all())
+    elif round_nr=='2':
+        student_list = list(group.student_set.filter(points1__gte=rnd.cutoff))
+    elif round_nr=='3':
+        student_list = list(group.student_set.filter(points2__gte=rnd.cutoff))
+    student_list.sort(cmp=cmp2)
     q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
 
     return render(request, 'svor/answers.html', {'student_list': student_list,
@@ -22,15 +27,18 @@ def answers(request, group_index, round_nr):
 
 def save_answers(request, group_index, round_nr):
     group = get_object_or_404(Group, index=group_index)
-    student_list = group.student_set.all()
     rnd = get_object_or_404(Round, id=str(round_nr)+str(group.grade))
     nr_of_questions = rnd.nr_of_questions
+    if round_nr=='1':
+        student_list = list(group.student_set.all())
+    elif round_nr=='2':
+        student_list = list(group.student_set.filter(points1__gte=rnd.cutoff))
+    elif round_nr=='3':
+        student_list = list(group.student_set.filter(points2__gte=rnd.cutoff))
     q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
 
     ans = ''
     active = 0
-    # mafs = request.POST['Sp_GunnarArthurHelgason']
-    # print mafs
     for student in student_list:
         for question in q_list:
             data = request.POST['Sp_' + str(question) + '_' + student.name]
@@ -38,7 +46,6 @@ def save_answers(request, group_index, round_nr):
                 ans = ans + data
             else:
                 ans = ans + 'x'
-
         if int(round_nr) is 1:
             student.ans1 = ans.lower()
         elif int(round_nr) is 2:
@@ -49,7 +56,6 @@ def save_answers(request, group_index, round_nr):
         student.save()
         active += (set('abcdeABCDE') & set(ans) != set())
         ans = ''
-
     try:
         results = get_object_or_404(Results, index=group.name+str(round_nr))
     except:

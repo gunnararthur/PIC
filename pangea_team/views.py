@@ -125,7 +125,6 @@ def generate_mail_list(round_nr, grade):
             return 'ERROR'
     else:
         rnd = get_object_or_404(Round,id=round_nr+grade)
-        print rnd.cutoff
         if round_nr=='1':
             with connection.cursor() as cursor:
                 cursor.execute('SELECT distinct(c.email) FROM skraning_group g,m2m_contact_group cg,skraning_contact c WHERE g.name=cg.group_id and cg.contact_id=c.email and g.grade=%s',[grade])
@@ -164,16 +163,13 @@ def results(request, round_nr):
     contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email').distinct())
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
 
-
-    #return HttpResponse(str(nr_groups_returned) + ' hópar af ' + str(nr_groups) + ' búnir að skila niðurstöðum. Netföng tengiliða sem eiga eftir að skrá niðurstöður sinna hópa eru: ' + email_list)
-    #return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups, 'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10)})
-
-    results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),0.5)
-    print results_data_8
-    results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),0.5)
-    print results_data_9
-    #results_data_8=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
-    #results_data_9=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
+    try:
+        criteria = float(request.POST['criteria'])
+        results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),criteria)
+        results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),criteria)
+    except:
+        results_data_8=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
+        results_data_9=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
 
     student_list8 = results_data_8['student_object']
     points8 = list(results_data_8['points'])
@@ -182,7 +178,8 @@ def results(request, round_nr):
     return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups,
      'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10),
      'student_list8': student_list8, 'points8': points8, 'points9': points9,
-     'student_list9': student_list9})
+     'student_list9': student_list9, 'round_nr': round_nr})
+
 
 def calculate_score(ans_str,rnd):
     #function which returns the total points and a binary array containing
@@ -207,14 +204,12 @@ def get_result_table(rnd):
             cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,s.ans1 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s ORDER BY s.kt',(rnd.grade,))
             result_table=cursor.fetchall()
     elif rnd.round_nr==2:
-        prev_round=get_object_or_404(Round,round_nr=1,grade=rnd.grade)
         with connection.cursor() as cursor:
-            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans2 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(rnd.grade,prev_round.cutoff,))
+            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans2 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(rnd.grade,rnd.cutoff,))
             result_table=cursor.fetchall()
     elif rnd.round_nr==3:
-        prev_round=get_object_or_404(Round,round_nr=2,grade=rnd.grade)
         with connection.cursor() as cursor:
-            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans3 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(rnd.grade,prev_round.cutoff,))
+            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans3 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(rnd.grade,rnd.cutoff,))
             result_table=cursor.fetchall()
     #else: ERROR
     #convert tuples to dataframe with column name ans instead of ansx where x in {1,2,3}
@@ -226,9 +221,6 @@ def get_result_table(rnd):
     return result_table
 
 def calculate_results(rnd,criteria):
-    import pandas as pd
-    import numpy as np
-
     result_table=get_result_table(rnd)
     result_table['points']=0
     binary_answers=pd.DataFrame(0,index=np.arange(len(result_table)), columns=range(1,rnd.nr_of_questions+1))
@@ -267,8 +259,10 @@ def calculate_results(rnd,criteria):
     elif criteria > 0 and criteria <=1:
         remaining_students=result_table[result_table['points']>=result_table['points'].iloc[int(m.ceil(criteria*len(result_table))-1)]]
     else: return ERROR
-    rnd.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
-    rnd.save()
+    if rnd.round_nr<3:
+        next_rnd = get_object_or_404(Round, id=str(rnd.round_nr+1)+rnd.grade)
+        next_rnd.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
+        next_rnd.save()
     return remaining_students
 
 def total_avg_questions(rnd):

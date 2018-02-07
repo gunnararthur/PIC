@@ -23,6 +23,16 @@
     <textarea name="body" cols="60" rows="10">{{email_list}}</textarea>
 
     <h3>Niðurstöður</h3>
+    <form action="{% url 'pangea_team:results' round_nr %}" method="post">
+        {% csrf_token %}
+        <p>Hér má reikna hvaða nemendur komast áfram úr {{round_nr}}. umferð.
+        Sláið inn tölu frá 0 til 1 til að stilla hlutfall þeirra sem komast áfram.
+        Einnig má slá inn tölu stærri en 1 og táknar hún þá fjölda þeirra nemenda
+        sem komast áfram.</p>
+        <input type="text" name="criteria" id="criteria" required>
+        <input type="submit" value="Reikna niðurstöður!" />
+    </form>
+
     <div class="tab">
         <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'London')">8.bekkur</button>
         <button class="tablinks" onclick="openCity(event, 'Paris')">9. bekkur</button>
