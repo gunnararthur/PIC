@@ -163,33 +163,28 @@ def results(request, round_nr):
     contacts_to_send=list(Contact.objects.filter(groups__in=groups_not_returned).values_list('email').distinct())
     email_list = ','.join([contacts_to_send[i][0] for i in range(len(contacts_to_send))])
 
-    # try:
-    #     criteria = float(request.POST['criteria'])
-    #     results_data_8=calculate_results(get_object_or_404(Round,id=round_nr+'8'),criteria)
-    #     results_data_9=calculate_results(get_object_or_404(Round,id=round_nr+'9'),criteria)
-    # except:
-    #     results_data_8=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
-    #     results_data_9=pd.DataFrame(0,index=np.arange(0), columns=['Nemandi','Kt','group_name','grade','ans','student_object','points'])
-
-    # student_list8 = results_data_8['student_object']
-    # points8 = list(results_data_8['points'])
-    # student_list9 = results_data_9['student_object']
-    # points9 = list(results_data_9['points'])
-
     if round_nr=='1':
         rnd8 = get_object_or_404(Round, id='28')
         rnd9 = get_object_or_404(Round, id='29')
-        student_list8 = Student.objects.filter(points1__gte=rnd8.cutoff).order_by('-points1')
-        student_list9 = Student.objects.filter(points1__gte=rnd9.cutoff).order_by('-points1')
-        points8 = [student_list8.values_list('points1')[i][0] for i in range(len(student_list8))]
-        points9 = [student_list9.values_list('points1')[i][0] for i in range(len(student_list9))]
+        results_data_8 = get_result_table(rnd8)
+        results_data_9 = get_result_table(rnd9)
+        results_data_8['points'] = [ student.points1 for student in results_data_8['student_object'] ]
+        results_data_9['points'] = [ student.points1 for student in results_data_9['student_object'] ]
+
     elif round_nr=='2' or round_nr=='3':
         rnd8 = get_object_or_404(Round, id='38')
         rnd9 = get_object_or_404(Round, id='39')
-        student_list8 = Student.objects.filter(points2__gte=rnd8.cutoff).order_by('-points2')
-        student_list9 = Student.objects.filter(points2__gte=rnd9.cutoff).order_by('-points2')
-        points8 = [student_list8.values_list('points2')[i][0] for i in range(len(student_list8))]
-        points9 = [student_list9.values_list('points2')[i][0] for i in range(len(student_list9))]
+        results_data_8 = get_result_table(rnd8)
+        results_data_9 = get_result_table(rnd9)
+        results_data_8['points'] = [ student.points2 for student in results_data_8['student_object'] ]
+        results_data_9['points'] = [ student.points2 for student in results_data_9['student_object'] ]
+
+    results_data_8 = results_data_8.sort_values(by='points',ascending=False).reset_index(drop=True)
+    results_data_9 = results_data_9.sort_values(by='points',ascending=False).reset_index(drop=True)
+    student_list8 = results_data_8['student_object']
+    student_list9 = results_data_9['student_object']
+    points8 = list(results_data_8['points'])
+    points9 = list(results_data_9['points'])
 
     return render(request, 'pangea_team/results.html', {'nr_groups_returned': nr_groups_returned, 'nr_groups': nr_groups,
      'email_list': email_list, 'nr_groups_returned_mod10': (nr_groups_returned % 10),
