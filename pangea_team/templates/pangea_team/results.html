@@ -23,7 +23,7 @@
     <textarea name="body" cols="60" rows="10">{{email_list}}</textarea>
 
     <h3>Niðurstöður</h3>
-    <form action="{% url 'pangea_team:results' round_nr %}" method="post">
+    <form action="{% url 'pangea_team:calculate_score_view' round_nr %}" method="post">
         {% csrf_token %}
         <p>Hér má reikna hvaða nemendur komast áfram úr {{round_nr}}. umferð.
         Sláið inn tölu frá 0 til 1 til að stilla hlutfall þeirra sem komast áfram.
