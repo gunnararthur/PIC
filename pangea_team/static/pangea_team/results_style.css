@@ -26,7 +26,7 @@ div {
 
 #wide {
     border-radius: 5px;
-    width: 520px;
+    width: 750px;
 }
 
 textarea {
@@ -93,7 +93,7 @@ input[type=text], select {
     width: 100%;
     padding: 0px 0px;
     overflow-y: scroll;
-    height: 440px;
+    height: 600px;
 }
 
 #nem {
