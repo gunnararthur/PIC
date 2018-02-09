@@ -9,7 +9,7 @@
 
 <body>
 <div id='container'>
-    <h2 align='center'>Pangea 2018 – Niðustöður {{round_nr}}. umferðar</h2>
+    <h2 align='center'>Pangea 2018 – Niðurstöður {{round_nr}}. umferðar</h2>
     <p align='center'>
         <b>{{group.school}} – {{group.grade}}. bekkur</b>
     </p>
@@ -44,7 +44,6 @@
             {% for question in q_list %}
             <th>{{question}}</th>
             {% endfor %}
-            <th>Stig 1. umf</th>
         </tr>
 
         {% for student in student_list %}
@@ -54,7 +53,6 @@
             {% for question in q_list %}
             <td><input type="text" name="Sp_{{question}}_{{student.name}}" maxlength="1" value="{% get_at_index student round_nr forloop.counter0 %}"> </td>
             {% endfor %}
-            <td>{{ student.points1 }}</td>
         </tr>
 
         {% endfor %}
