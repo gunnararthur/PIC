@@ -240,9 +240,10 @@ def get_result_table(rnd):
     return result_table
 
 def calculate_results(rnd,criteria):
-    result_table=get_result_table(rnd)
-    result_table['points']=0
-    binary_answers=pd.DataFrame(0,index=np.arange(len(result_table)), columns=range(1,rnd.nr_of_questions+1))
+    result_table = get_result_table(rnd)
+    result_table['points'] = 0
+    binary_answers = pd.DataFrame(0,index=np.arange(len(result_table)), columns=range(1,rnd.nr_of_questions+1))
+    active_student = np.full((len(result_table),), False, dtype=bool)
     for i in range(0,len(result_table)):
         score_of_student = calculate_score(result_table['ans'][i],rnd)
         result_table.points.iloc[i] = score_of_student[0]
@@ -254,9 +255,12 @@ def calculate_results(rnd,criteria):
             student.points2=result_table['points'][i]
         elif rnd.round_nr==3:
             student.points3=result_table['points'][i]
+        #check whether student answered any question at all
+        active_student[i]=set('abcde') & set(result_table['ans'][i]) != set()
         #else:
             #return ERROR
         student.save()
+    binary_answers=binary_answers[active_student]
     binary_answers['group_name']=result_table['group_name']
     grouped_results=binary_answers.groupby('group_name')
     group_names=grouped_results.groups.keys()
@@ -294,11 +298,18 @@ def total_avg_questions(rnd):
     active_students = results.active
     sum_of_active+=active_students
     count_list=[ y+active_students*float(x) for x,y in zip(avg_of_group,count_list) ]
+  if sum_of_active !=0:
     return [x/sum_of_active for x in count_list]
+  else:
+    return x
 
 @login_required(login_url='/pangea_team/login')
 def stat(request, grade):
-    return HttpResponse('Hér væri hægt að birta tölfræði.')
+    rnds=Round.objects.filter(grade=grade)
+    prop_list=[]
+    for rnd in rnds:
+        prop_list.append(total_avg_questions(rnd))
+    return HttpResponse(', '.join([str(i) for i in prop_list[0]]))
 
 @login_required(login_url='/pangea_team/login')
 def test(request):
