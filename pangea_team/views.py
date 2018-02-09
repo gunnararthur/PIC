@@ -280,7 +280,7 @@ def calculate_results(rnd,criteria):
     else: return ERROR
     if rnd.round_nr<3:
         next_rnd = get_object_or_404(Round, id=str(rnd.round_nr+1)+rnd.grade)
-        if next_rnd.cutoff==0
+        if next_rnd.cutoff==0:
             next_rnd.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
             next_rnd.save()
     return remaining_students
