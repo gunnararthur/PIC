@@ -9,7 +9,8 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.db import connection
 from django.contrib import messages
-import os, re, pandas as pd, numpy as np, math as m, time
+import os, re, pandas as pd, numpy as np, math as m, time, StringIO, xlsxwriter as xl, csv
+from django.utils.encoding import smart_str
 
 
 from skraning.models import Group, Student, Contact, Round, Results
@@ -228,7 +229,7 @@ def get_result_table(rnd):
             result_table=cursor.fetchall()
     elif rnd.round_nr==3:
         with connection.cursor() as cursor:
-            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans3 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points1>=%s ORDER BY s.kt',(rnd.grade,rnd.cutoff,))
+            cursor.execute('SELECT s.name,s.kt,g.name as group_name,g.grade,ans3 FROM skraning_student s,skraning_group g WHERE s.group_id=g.name and g.grade=%s and s.points2>=%s ORDER BY s.kt',(rnd.grade,rnd.cutoff,))
             result_table=cursor.fetchall()
     #else: ERROR
     #convert tuples to dataframe with column name ans instead of ansx where x in {1,2,3}
@@ -302,6 +303,27 @@ def total_avg_questions(rnd):
     return [x/sum_of_active for x in count_list]
   else:
     return x
+
+@login_required(login_url='/pangea_team/login')
+def get_excel_results(request, round_nr, grade):
+    rnd = get_object_or_404(Round, id=round_nr+grade)
+    table = get_result_table(rnd)
+    table.drop('student_object', axis=1, inplace=True)
+    filename = 'Pangea_urslit_'+grade+'.csv'
+    return write_csv(table, filename)
+
+def write_csv(df, filename):
+    # Takes in a table of students as a data frame and returns HttpResponse
+    # file-like object containing a csv file with the table.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename='+ filename
+    response['Content-Encoding'] = 'UTF-8'
+    response['Content-type'] = 'text/csv; charset=UTF-8'
+    writer = csv.writer(response, dialect='excel')
+    writer.writerow(list(df.columns))
+    for i in range(len(df.index)):
+        writer.writerow([smart_str(i) for i in list(df.iloc[i,:])])
+    return response
 
 @login_required(login_url='/pangea_team/login')
 def stat(request, grade):

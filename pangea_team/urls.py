@@ -20,6 +20,7 @@ urlpatterns = [
 
     url(r'^home/results/(?P<round_nr>[1-3])$', views.results, name='results'),
     url(r'^home/results/(?P<round_nr>[1-3])/calc$', views.calculate_score_view, name='calculate_score_view'),
+    url(r'^home/results/(?P<round_nr>[1-3])/(?P<grade>[89])/excel$', views.get_excel_results, name='get_excel_results'),
 
     url(r'^home/stat/(?P<grade>[89])$', views.stat, name='stat'),
 
