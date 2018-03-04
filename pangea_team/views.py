@@ -305,10 +305,10 @@ def total_avg_questions(rnd):
 
 @login_required(login_url='/pangea_team/login')
 def get_excel_results(request, round_nr, grade):
-    rnd = get_object_or_404(Round, id=round_nr+grade)
-    table = get_result_table(rnd)
+    next_rnd = get_object_or_404(Round, id=str(int(round_nr)+1)+grade)
+    table = get_result_table(next_rnd)
     table['group_name']=[get_object_or_404(Group,name=g).school for g in table['group_name']]
-    table.drop(['student_object','grade','ans'], axis=1, inplace=True)
+    table.drop(['student_object','grade','ans','Kt'], axis=1, inplace=True)
     filename = 'Pangea_urslit_'+grade+'.csv'
     return write_csv(table, filename)
 
