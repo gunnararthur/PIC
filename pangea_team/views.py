@@ -279,15 +279,14 @@ def calculate_results(rnd,criteria):
     #now extract data of students that go to the next round
     result_table=result_table.sort_values(by='points',ascending=False).reset_index(drop=True)
     if criteria > 1:
-        remaining_students=result_table[result_table['points']>=result_table['points'].iloc[criteria-1]]
+        remaining_students=result_table[result_table['points']>=result_table['points'].iloc[int(criteria)-1]]
     elif criteria > 0 and criteria <=1:
         remaining_students=result_table[result_table['points']>=result_table['points'].iloc[int(m.ceil(criteria*len(result_table))-1)]]
     else: return ERROR
     if rnd.round_nr<3:
         next_rnd = get_object_or_404(Round, id=str(rnd.round_nr+1)+rnd.grade)
-        if next_rnd.cutoff==0:
-            next_rnd.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
-            next_rnd.save()
+        next_rnd.cutoff = remaining_students['points'].iloc[len(remaining_students)-1]
+        next_rnd.save()
     return remaining_students
 
 def total_avg_questions(rnd):
@@ -308,7 +307,8 @@ def total_avg_questions(rnd):
 def get_excel_results(request, round_nr, grade):
     rnd = get_object_or_404(Round, id=round_nr+grade)
     table = get_result_table(rnd)
-    table.drop('student_object', axis=1, inplace=True)
+    table['group_name']=[get_object_or_404(Group,name=g).school for g in table['group_name']]
+    table.drop(['student_object','grade','ans'], axis=1, inplace=True)
     filename = 'Pangea_urslit_'+grade+'.csv'
     return write_csv(table, filename)
 
