@@ -1,0 +1,114 @@
+<html>
+ <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     {% load static %}
+     <link rel="stylesheet" type="text/css" href="{% static 'svor/style.css' %}" />
+     <link rel="shortcut icon" href="{% static 'svor/pangeaicon_2018.ico' %}" />
+     <title>Pangea · {{group.school}} – {{group.grade}}. bekkur</title>
+ </head>
+
+<body>
+<div id='container'>
+    <h2 align='center'>Pangea 2018 – Niðurstöður {{round_nr}}. umferðar</h2>
+    <p align='center'>
+        <b>{{group.school}} – {{group.grade}}. bekkur</b>
+    </p>
+    <p>
+        Skráið svör þátttakenda í viðeigandi reiti með því að skrifa þann bókstaf
+        sem merkt var við í hverri spurningu. Skiljið reiti eftir auða ef svör
+        vantar eða ef nemandi tók ekki þátt í keppninni.
+    </p>
+    <p>
+        Geymið niðurstöður þegar búið er að fylla inn svör allra með því að ýta
+        á <em>Vista</em> – hnappinn fyrir neðan töfluna. Alltaf má bæta við eða breyta
+        skráðum niðurstöðum ef upp kemst um villur í skráningunni. Þá er
+        töflunni einfaldlega breytt og niðurstöður vistaðar á sama hátt og áður.
+    </p>
+    <p>
+        Gangið úr skugga um að allir tengiliðir skólans hafi aðgang að
+        útfyllingarskjalinu og geti skráð niðurstöður sinna nemenda. Hafið
+        samband með tölvupósti á info@pangeakeppni.is ef eitthvað kemur upp á eða ef
+        grunur leikur á að rangur hlekkur hafi borist.
+    </p>
+    <form action="{% url 'svor:save_answers' group.index round_nr %}" method="post">
+        {% csrf_token %}
+        {% load svor_tags %}
+
+        <table id="nem">
+        <tr>
+            <th rowspan="2">Nemandi</th>
+            <th rowspan="2">Kennitala</th>
+            <th colspan={{nr_of_questions}}> Spurningar </th>
+        </tr>
+        <tr>
+            {% for question in q_list %}
+            <th>{{question}}</th>
+            {% endfor %}
+        </tr>
+
+        {% for student in student_list %}
+        <tr>
+            <td class="nafn"> {{ student.name }} </td>
+            <td class="nafn"> {{ student.kt }} </td>
+            {% for question in q_list %}
+            <td><input type="text" name="Sp_{{question}}_{{student.name}}" maxlength="1" value="{% get_at_index student round_nr forloop.counter0 %}"> </td>
+            {% endfor %}
+        </tr>
+
+        {% endfor %}
+
+        </table>
+
+        <input type="submit" name="save" value="Vista">
+    </form>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        {% for message in messages %}
+        <span class="close">&times;</span>
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+      </div>
+
+    </div>
+
+</div>
+<!-- Trigger/Open The Modal -->
+<button id="is_message"></button>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById('myModal');
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("is_message");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    {% if messages%}
+    document.getElementById("is_message").click();
+    {% endif %}
+</script>
+
+</body>
+</html>

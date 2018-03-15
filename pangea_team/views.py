@@ -10,6 +10,7 @@ from django.conf import settings
 from django.db import connection
 from django.contrib import messages
 import os, re, pandas as pd, numpy as np, math as m, time, StringIO, xlsxwriter as xl, csv
+from svor.views import cmp2
 from django.utils.encoding import smart_str
 
 
@@ -343,3 +344,45 @@ def time_test(request):
     time.sleep(sec)
     messages.success(request, 'Biðinni er lokið!')
     return HttpResponseRedirect(reverse('pangea_team:test'))
+
+@login_required(login_url='/pangea_team/login')
+def finals(request,grade,action_type):
+    rnd=get_object_or_404(Round,id='3'+grade)
+    nr_of_questions=rnd.nr_of_questions
+    q_list = range(1,nr_of_questions+1)
+    student_list=list(Student.objects.filter(points2__gte=rnd.cutoff))
+    if action_type == 's':
+        student_list.sort(cmp=cmp2)
+    elif action_type == 'c':
+        student_list = sorted(student_list, key = lambda x: (x.points3, x.points2,x.points1), reverse=True)
+    return render(request, 'pangea_team/answers_finals.html', {'student_list': student_list,
+    'q_list': q_list, 'nr_of_questions': nr_of_questions, 'round_nr': 3,'grade':grade})
+
+
+@login_required(login_url='/pangea_team/login')
+def finals_action_view(request,grade):
+    rnd = get_object_or_404(Round, id='3'+str(grade))
+    nr_of_questions = rnd.nr_of_questions
+    student_list = list(Student.objects.filter(points2__gte=rnd.cutoff))
+    q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
+    ans = ''
+    active = 0
+    for student in student_list:
+        for question in q_list:
+            data = request.POST['Sp_' + str(question) + '_' + student.name]
+            if data in 'abcdeABCDE' and data is not '':
+                ans = ans + data
+            else:
+                ans = ans + 'x'
+        student.ans3 = ans.lower()
+        # ELSE SKILA ERROR
+        student.save()
+        ans = ''
+    if 'save' in request.POST:
+        messages.success(request, 'Skráð svör hafa verið vistuð!')
+        action_type='s'
+    elif 'calculate' in request.POST:
+        results_data=calculate_results(get_object_or_404(Round,id='3'+ grade),1)
+        action_type='c'
+        messages.success(request, 'Einkunnir hafa verið reiknaðar')
+    return HttpResponseRedirect(reverse('pangea_team:finals', args=[grade,action_type]))

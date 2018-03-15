@@ -39,6 +39,16 @@
         </a>
     </div>
 
+    <button class="accordion">Úrslit</button>
+    <div class="panel">
+        <a href="{% url 'pangea_team:finals' 8 's' %}">
+            <button type="submit">8. bekkur</button>
+        </a>
+        <a href="{% url 'pangea_team:finals' 9 's' %}">
+            <button type="submit">9. bekkur</button>
+        </a>
+    </div>
+
     <button class="accordion">Aukadót</button>
     <div class="panel">
         <a href="{% url 'pangea_team:test' %}">
