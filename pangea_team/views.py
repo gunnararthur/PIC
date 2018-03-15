@@ -350,7 +350,8 @@ def finals(request,grade,action_type):
     rnd=get_object_or_404(Round,id='3'+grade)
     nr_of_questions=rnd.nr_of_questions
     q_list = range(1,nr_of_questions+1)
-    student_list=list(Student.objects.filter(points2__gte=rnd.cutoff))
+    student_list = list(Student.objects.filter(points2__gte=rnd.cutoff))
+    student_list = [s for s in student_list if s.group.grade==grade]
     if action_type == 's':
         student_list.sort(cmp=cmp2)
     elif action_type == 'c':
