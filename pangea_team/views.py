@@ -365,6 +365,7 @@ def finals_action_view(request,grade):
     rnd = get_object_or_404(Round, id='3'+str(grade))
     nr_of_questions = rnd.nr_of_questions
     student_list = list(Student.objects.filter(points2__gte=rnd.cutoff))
+    student_list = [s for s in student_list if s.group.grade==grade]
     q_list = range(1,nr_of_questions+1) # Teljum spurningar frá 1
     ans = ''
     active = 0
