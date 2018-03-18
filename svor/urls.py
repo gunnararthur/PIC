@@ -7,4 +7,6 @@ app_name = 'svor'
 urlpatterns = [
     url(r'^(?P<group_index>[0-9a-f]+)/(?P<round_nr>[1-2])$', views.answers, name='answers'),
     url(r'^vista_svor/(?P<group_index>[0-9a-f]+)/(?P<round_nr>[1-2])$', views.save_answers, name='save_answers'),
+    url(r'^results/(?P<group_index>[0-9a-f]+)/$', views.to_teachers, name='to_teachers'),
+
 ]

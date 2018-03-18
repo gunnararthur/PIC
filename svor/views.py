@@ -97,3 +97,11 @@ def cmp2(student1,student2):
         return -1
     else:
         return 1
+def to_teachers(request,group_index):
+    group = get_object_or_404(Group,index=group_index)
+    rnd=get_object_or_404(Round,id='3'+group.grade)
+    student_final = [s for s in Student.objects.filter(points2__gte=rnd.cutoff) if s.group.grade==group.grade]
+    student_final = sorted(student_final, key = lambda x: (x.points3, x.points2, x.points1), reverse=True)
+    students_from_group=Student.objects.filter(group=group)
+    rank_of_students=[str([sf.kt for sf in student_final].index(s.kt) + 1) if s.points3 !=0 else '' for s in students_from_group]
+    return render(request, 'svor/to_teachers.html', {'student_list': students_from_group, 'rank': rank_of_students, 'group':group})

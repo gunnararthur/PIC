@@ -1,0 +1,64 @@
+<html>
+ <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     {% load static %}
+     <link rel="stylesheet" type="text/css" href="{% static 'pangea_team/style_finals.css' %}" />
+     <link rel="shortcut icon" href="{% static 'pangea_team/pangeaicon_2018.ico' %}" />
+     <title>Pangea - Niðurstöður - {{group.name}} - {{group.grade}}. bekkur</title>
+ </head>
+
+<body>
+<div id='container'>
+    <h2 align='center'>Pangea - Niðurstöður - {{group.name}}</h2>
+    <p align='center'>
+        <b>{{group.grade}}. bekkur</b>
+    </p>
+    <p>
+      Kæru kennarar,
+      Nú er stærfræðikeppninni Pangeu 2017 formlega lokið. Í þessu skjali eru niðurstöður þáttakenda úr ykkar bekk. Í töflunni hér að neðan sést stigafjöldi sem hver þáttakandi hlaut í hverri umferð fyrir sig. Heildarstigafjöldi var 50 stig í fyrstu umferð, 48 stig í annarri umferð og 50 stig í úrslitunum. Í dálkinum lengst til hægri er sæti nemenda í úrslitum ef við á. Við þökkum kærlega fyrir samstarfið og alla hjálpina við að gera þessa keppni mögulega!
+      <br>
+      Með góðri kveðju,<br><br>
+      Freyja Björk Dagbjartsdóttir<br>
+      Gunnar Arthúr Helgason<br>
+      Muhammed Emin Kizilkaya<br>
+      Sölvi Rögnvaldsson
+    </p>
+    <form >
+        {% csrf_token %}
+        {% load svor_tags %}
+
+        <table id="nem">
+        <tr>
+            <th rowspan="2">Nemandi</th>
+            <th rowspan="2">Kennitala</th>
+            <th colspan="3"> Stig </th>
+            <th rowspan="2">Sæti í úrslitum</th>
+
+        </tr>
+        <tr>
+            <th>1. umferð</th>
+            <th>2. umferð</th>
+            <th>Úrslit</th>
+        </tr>
+
+        {% for student in student_list %}
+        <tr>
+            <td class="nafn"> {{ student.name }} </td>
+            <td class="nafn"> {{ student.kt }} </td>
+            <td class="nafn"> {{ student.points1 }} </td>
+            <td class="nafn"> {{ student.points2 }} </td>
+            <td class="nafn"> {{ student.points3 }} </td>
+            <td class="nafn"> {% get_val_at_index rank forloop.counter0 %} </td>
+        </tr>
+
+        {% endfor %}
+
+        </table>
+
+    </form>
+
+
+</div>
+
+</body>
+</html>

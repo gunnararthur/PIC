@@ -297,8 +297,8 @@ def total_avg_questions(rnd):
   for results in results_objects:
     avg_of_group=results.results.split('-')
     active_students = results.active
-    sum_of_active+=active_students
-    count_list=[ y+active_students*float(x) for x,y in zip(avg_of_group,count_list) ]
+    sum_of_active += active_students
+    count_list=[ y + active_students*float(x) for x,y in zip(avg_of_group,count_list) ]
   if sum_of_active !=0:
     return [x/sum_of_active for x in count_list]
   else:
@@ -310,7 +310,7 @@ def get_excel_results(request, round_nr, grade):
     table = get_result_table(next_rnd)
     table['group_name']=[get_object_or_404(Group,name=g).school for g in table['group_name']]
     table.drop(['student_object','grade','ans','Kt'], axis=1, inplace=True)
-    filename = 'Pangea_urslit_'+grade+'.csv'
+    filename = 'Pangea_urslit_' + grade + '.csv'
     return write_csv(table, filename)
 
 def write_csv(df, filename):
