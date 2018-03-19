@@ -44,7 +44,7 @@ def send_email(request):
         grade = email_group[1]
         recipients_list = generate_mail_list(round_nr, grade).split(',')
     except:
-        return HttpResponse('Passa að velja einhver hóp.')
+        return HttpResponse('Passa að velja einhvern hóp.')
 
     group_list = Group.objects.filter(contact__email__in=recipients_list).distinct()
     for group in group_list:
