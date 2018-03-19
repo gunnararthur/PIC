@@ -102,6 +102,8 @@ def eval_placeholder(s,group,round_nr):
             vals.append(group.grade + '. bekkur')
         if 'link'==name:
             vals.append('http://138.197.177.72/svor/' + group.index + '/' + round_nr)
+        if 'link2'==name:
+            vals.append('http://138.197.177.72/svor/results/' + group.index)
     return re.sub(r"#([A-Z,a-z,0-9,\.]+)#","%s",s) % tuple(vals)
 
 
